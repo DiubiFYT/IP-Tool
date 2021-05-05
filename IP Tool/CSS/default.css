@@ -16,10 +16,11 @@ html, body{
 }
 
 .parallax{
-    min-height: 200%;
+    min-height: 100%;
     background-attachment: fixed;
     background-size: cover;
     background-position: 50% 50%;
+    background-repeat: no-repeat;
 }
 
 .paral h1 {
@@ -30,7 +31,7 @@ html, body{
     line-height: 100px;
 }
 
-.center{
+.centerForm{
     width: 500px;
    height: 410px;
    position: absolute;
@@ -38,6 +39,16 @@ html, body{
    left: 50%;
    margin-left: -250px;
    margin-top: -205px;
+}
+
+.centerDiv{
+   Width: 2000px;
+   height: 1000px;
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   margin-left: -680px;
+   margin-top: -500px;
 }
 
 .margintop{
@@ -61,4 +72,8 @@ html, body{
 
 .marginbottom{
     margin-bottom: 10px;
+}
+
+.hidden{
+    display: none !important;
 }

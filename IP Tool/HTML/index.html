@@ -10,7 +10,7 @@
 
     <body>
         <div class="parallax">
-            <form class="bg-dark text-white rounded center padding paddingbottom" id="FirstForm">
+            <form class="bg-dark text-white rounded centerForm padding paddingbottom" id="FirstForm">
                 <div class="robotolight row">
                     <div class="form-group">
                         <h1 class="text-center">IP Tool</h1>
@@ -33,24 +33,29 @@
                     </div>
                     <button type="button" onclick="CheckAndShowResults('results')" class="btn btn-primary btn-info" style="margin-top: 10px;">Calcola</button>
                 </div>              
-            </form>
+            </form>           
         </div>
 
-        <div class="container bg-light roboto rounded" id="results" style="color: black;">
+        <div class="container bg-light roboto rounded centerDiv hidden" id="results" style="color: black;">
             
             <div class="container-fluid padding">
-                <h5>Classe di appartenenza</h5>
-                <h2 value="" id="belongsToWhichClass"></h2>
+                <h5>Classe di appartenenza del primo IP</h5>
+                <h2 value="" id="1stIPbelongsToWhichClass"></h2>
+                <br>
+                <h5>Classe di appartenenza del secondo IP</h5>
+                <h2 value="" id="2ndIPbelongsToWhichClass"></h2>
             </div>
             <div class="container-fluid padding">
-                <h5>La subnet mask di default coincide con quella da te inserita?</h5>
-                <img id="correspondingSubnetMask">
+                <h5>La prima subnet mask da te inserita corrisponde con la subnet mask di default?</h5>
+                <img id="firstCorrespondingSubnetMask" width="10%">
+                <br>
+                <h5>La seconda subnet mask da te inserita corrisponde con la subnet mask di default?</h5>
+                <img id="secondCorrespondingSubnetMask" width="10%">
             </div>
             <div class="container-fluid padding">
                 <h5>I due indirizzi si trovano nella stessa rete?</h5>
-                <img id="sameNetwork">
+                <img id="sameNetwork" width="10%">
             </div>
-
         </div>
 
         <script src="../JS/Main.js"></script>
