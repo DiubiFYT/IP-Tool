@@ -1,0 +1,23 @@
+<!--
+            <form class="bg-dark text-white rounded center needs-validation" id="SecondForm" style="margin-top: 1000px;">
+                <div class="card-body roboto row">
+                    <div class="form-group">
+                        <label for="1st">Primo IP</label>
+                        <input type="text" class="form-control" id="firstField2" placeholder="xxx.xxx.xxx.xxx" required>
+                    </div>
+                    <div class="form-group margintop">
+                        <label for="2nd">Subnet mask</label>
+                        <input type="text" class="form-control" id="secondField2" placeholder="xxx.xxx.xxx.xxx" required>
+                    </div>                    
+                    <div class="form-group margintop">
+                        <label for="3rd">Secondo IP</label>
+                        <input type="text" class="form-control" id="thirdField2" placeholder="xxx.xxx.xxx.xxx" required>
+                    </div>
+                    <div class="form-group margintop">
+                        <label for="4th">Subnet mask</label>
+                        <input type="text" class="form-control" id="fourthField2" placeholder="xxx.xxx.xxx.xxx" required>
+                    </div>
+                    <button type="button" onclick="scroller('FirstForm')" class="btn btn-primary btn-info" style="margin-top:30px;">Invia</button>
+                </div>
+            </form>
+-->

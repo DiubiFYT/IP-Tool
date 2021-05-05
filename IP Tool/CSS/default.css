@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+.roboto{
+    font-family: 'Roboto', sans-serif;
+}
+
+.robotolight{
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+
+html, body{
+    height: 100%;
+    overflow: hidden;
+    background-image: url('https://wallpaperaccess.com/full/796863.jpg');
+}
+
+.parallax{
+    min-height: 200%;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+.paral h1 {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 60px;
+    text-align: center;
+    padding-top: 60px;
+    line-height: 100px;
+}
+
+.center{
+    width: 500px;
+   height: 410px;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   margin-left: -250px;
+   margin-top: -205px;
+}
+
+.margintop{
+    margin-top: 10px;
+}
+
+.padding{
+    padding: 20px;
+}
+
+.paddingbottom{
+    padding-bottom: 20px;
+}
+
+.jumbotron{
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+    background-size: 100% 100%;
+}
+
+.marginbottom{
+    margin-bottom: 10px;
+}
