@@ -20,7 +20,6 @@ function CheckAndShowResults(id){
         //document.getElementById('FirstForm').style.opacity = 0;
         //document.body.style.overflow = "auto";
         //document.getElementById('results').style.marginTop = "-1750px";
-        //Bela
         e.classList.remove("hidden");
         PrintResults();
 
