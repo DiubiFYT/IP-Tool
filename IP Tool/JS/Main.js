@@ -149,6 +149,12 @@ function OctectToBinary(octect){
 }
 
 function StringToBinary(str){
+
+if(!IsAValidDottedDecimal(str)){
+    console.log(str + " it's not a valid ip!");
+    return null;
+}
+
     let octetc1 = parseInt(str.split('.', 1));
     let octetc2 = parseInt(str.split('.', 2));
     let octetc3 = parseInt(str.split('.', 3));
