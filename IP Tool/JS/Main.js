@@ -4,15 +4,11 @@ var falseImage = 'https://icebag.fr/wp-content/uploads/2020/10/remove-300x300.pn
 function CheckAndShowResults(id){
     let firstField = document.getElementById("firstField").value;
     let secondField = document.getElementById("secondField").value;
-    let thirdField = document.getElementById("thirdField").value;
-    let fourthField = document.getElementById("fourthField").value;
 
     if(!IsNullOrWhiteSpace(firstField) && IsAValidDottedDecimal(firstField) 
-    && !IsNullOrWhiteSpace(secondField) && IsAValidDottedDecimal(secondField)
-    && !IsNullOrWhiteSpace(thirdField) && IsAValidDottedDecimal(thirdField)
-    && !IsNullOrWhiteSpace(fourthField) && IsAValidDottedDecimal(fourthField)){
+    && !IsNullOrWhiteSpace(secondField) && IsAValidDottedDecimal(secondField)){
 
-        console.log(firstField + ", " + secondField + ", " +  thirdField + ", " + fourthField);
+        console.log(firstField + ", " + secondField);
         let e = document.getElementById(id);
         console.log(e)
         //e.scrollIntoView({block: 'end', behavior: 'smooth', inline: 'nearest'});
@@ -39,85 +35,17 @@ window.addEventListener('scroll',() => {
 function PrintResults(){
     console.log("Printing...");
 
-    let firstIP = document.getElementById("firstField").value;
-    let secondIP = document.getElementById("thirdField").value;
+    let IP = document.getElementById("firstField").value;
 
-    let detected1stIPClass = DetectIPClass(firstIP);
-    document.getElementById("1stIPbelongsToWhichClass").textContent = detected1stIPClass;
-    console.log("First IP Class: " + detected1stIPClass);
+    let IPClass = DetectIPClass(IP);
+    document.getElementById("IPbelongsToWhichClass").textContent = IPClass;
+    console.log("IP Class: " + IPClass);
 
-    let detected2ndIPClass = DetectIPClass(secondIP);
-    document.getElementById("2ndIPbelongsToWhichClass").textContent = detected2ndIPClass;
-    console.log("Second IP Class: " + detected2ndIPClass);
+    let nSubnets = document.getElementById("secondField").value;
+    let IPSubnetMaskDefault = DefaultSubnetMask(IP);
 
-    let firstSubnetMask = document.getElementById("secondField").value;
-    let secondSubnetMask = document.getElementById("fourthField").value;
+    let nHost = GetDefaultNBitHost(IP) - Math.log2(GetNSubnets(nSubnets));
 
-    let firstSMCorrespondsImage = document.getElementById("firstCorrespondingSubnetMask");
-    let secondSMCorrespondsImage = document.getElementById("secondCorrespondingSubnetMask");
-
-    if(firstSubnetMask == DefaultSubnetMask(document.getElementById("firstField").value)){
-        firstSMCorrespondsImage.src = trueImage;
-    }
-    else{
-        firstSMCorrespondsImage.src = falseImage;
-    }
-
-    if(secondSubnetMask == DefaultSubnetMask(document.getElementById("thirdField").value)){
-        secondSMCorrespondsImage.src = trueImage;
-    }
-    else{
-        secondSMCorrespondsImage.src = falseImage;
-    }
-
-    let sameNetworkImage = document.getElementById("sameNetwork");
-    if(detected1stIPClass == detected2ndIPClass){
-        if(detected1stIPClass == "Classe A"){
-            let Octets1 = firstIP.split('.', 1).toString();
-            let Octets2 = secondIP.split('.', 1).toString();
-
-            console.log(detected1stIPClass + ": " + Octets1 + ", " + Octets2);
-
-            if(Octets1 == Octets2){
-                console.log("Class A ==")
-                sameNetworkImage.src = trueImage;
-            }
-            else{
-                sameNetworkImage.src = falseImage;
-            }
-        }
-        else if(detected1stIPClass == "Classe B"){
-            let Octets1 = firstIP.split('.', 2).toString();
-            let Octets2 = secondIP.split('.', 2).toString();
-
-            console.log(detected1stIPClass + ": " + Octets1 + ", " + Octets2);
-
-            if(Octets1 == Octets2){
-                console.log("Class B ==")
-                sameNetworkImage.src = trueImage;
-            }
-            else{
-                sameNetworkImage.src = falseImage;
-            }
-        }
-        else if(detected1stIPClass == "Classe C"){
-            let Octets1 = firstIP.split('.', 3).toString();
-            let Octets2 = secondIP.split('.', 3).toString();
-
-            console.log(detected1stIPClass + ": " + Octets1 + ", " + Octets2);
-
-            if(Octets1 == Octets2){
-                console.log("Class C ==")
-                sameNetworkImage.src = trueImage;
-            }
-            else{
-                sameNetworkImage.src = falseImage;
-            }
-        }
-    }
-    else{
-        sameNetworkImage.src = falseImage;
-    }
 }
 
 function IsNullOrWhiteSpace(str){
@@ -148,14 +76,20 @@ function OctectToBinary(octect){
     return ("000000000" + octect.toString(2)).substr(-8);
 }
 
-function StringToBinary(str){
+function IPToBinary(str){
+
+    if(!IsAValidDottedDecimal(str)){
+        console.log(str + " it's not a valid IP!");
+        return null;
+    }
+
     let octetc1 = parseInt(str.split('.', 1));
     let octetc2 = parseInt(str.split('.', 2));
     let octetc3 = parseInt(str.split('.', 3));
     let octetc4 = parseInt(str.split('.', 4));
 
-    let binaryIp = OctectToBinary(octetc1) + "." + OctectToBinary(octetc2) + "." + OctectToBinary(octetc3) + "." + OctectToBinary(octetc4);
-    return binaryIp;
+    let binaryIP = OctectToBinary(octetc1) + "." + OctectToBinary(octetc2) + "." + OctectToBinary(octetc3) + "." + OctectToBinary(octetc4);
+    return binaryIP;
 }
 
 function DetectIPClass(IP){
@@ -178,15 +112,40 @@ function DetectIPClass(IP){
 }
 
 function DefaultSubnetMask(IP){
-    let ipClass = DetectIPClass(IP);
+    let IPClass = DetectIPClass(IP);
 
-    if(ipClass == "Classe A"){
+    if(IPClass == "Classe A"){
         return "255.0.0.0";
     }
-    else if(ipClass == "Classe B"){
+    else if(IPClass == "Classe B"){
         return "255.255.0.0";
     }
-    else if(ipClass == "Classe C"){
+    else if(IPClass == "Classe C"){
         return "255.255.255.0";
     }
+}
+
+function GetDefaultNBitHost(IP){
+    let IPClass = DetectIPClass(IP);
+
+    if(IPClass == "Classe A"){
+        return 24;
+    }
+    else if(IPClass == "Classe B"){
+        return 16;
+    }
+    else if(IPClass == "Classe C"){
+        return 8;
+    }
+}
+
+function GetNSubnets(nSubnets){
+    let n = nSubnets;
+    let ex = 0;
+    while(nSubnets < n){
+        ex++;
+        n = Math.pow(2, ex);
+    }
+
+    return n;
 }
