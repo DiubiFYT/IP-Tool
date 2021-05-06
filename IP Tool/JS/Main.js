@@ -44,8 +44,7 @@ function PrintResults(){
     let nSubnets = document.getElementById("secondField").value;
     let IPSubnetMaskDefault = DefaultSubnetMask(IP);
 
-    let nHost = GetDefaultNBitHost(IP) - Math.log2(GetNSubnets(nSubnets));
-
+    let SubnetMaskBinary = GetSubnetMaskBinary(IP,nSubnets);
 }
 
 function IsNullOrWhiteSpace(str){
@@ -148,4 +147,38 @@ function GetNSubnets(nSubnets){
     }
 
     return n;
+}
+
+function GetSubnetMaskBinary(IP, nSubnets){
+
+    let nBitSubnet = Math.log2(GetNSubnets(nSubnets));
+    let nBitHost = GetDefaultNBitHost(IP) - nBitSubnet;
+    let nBitNetwork = 32 - nBitSubnet - nBitHost;
+
+    let str;
+    for(let i = 0; i < nBitNetwork; i++){
+
+        if(i % 8 == 0){
+            str +=".";
+        }
+        str += "1";
+    }
+
+    for(let i = 0; i < nBitSubnet; i++){
+
+        if(i % 8 == 0){
+            str +=".";
+        }
+        str += "1";
+    }
+
+    for(let i = 0; i < nBitHost; i++){
+
+        if(i + nBitSubnet % 8 == 0){
+            str +=".";
+        }
+        str += "0";
+    }
+
+    return str;
 }
