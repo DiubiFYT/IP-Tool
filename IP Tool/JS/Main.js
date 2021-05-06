@@ -1,3 +1,5 @@
+var trueImage = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png';
+var falseImage = 'https://icebag.fr/wp-content/uploads/2020/10/remove-300x300.png';
 
 function CheckAndShowResults(id){
     let firstField = document.getElementById("firstField").value;
@@ -42,9 +44,11 @@ function PrintResults(){
 
     let detected1stIPClass = DetectIPClass(document.getElementById("firstField").value);
     document.getElementById("1stIPbelongsToWhichClass").textContent = detected1stIPClass;
+    console.log("First IP Class: " + detected1stIPClass);
 
     let detected2ndIPClass = DetectIPClass(document.getElementById("thirdField").value);
     document.getElementById("2ndIPbelongsToWhichClass").textContent = detected2ndIPClass;
+    console.log("Second IP Class: " + detected2ndIPClass);
 
     let firstSubnetMask = document.getElementById("secondField").value;
     let secondSubnetMask = document.getElementById("fourthField").value;
@@ -53,55 +57,66 @@ function PrintResults(){
     let secondSMCorrespondsImage = document.getElementById("secondCorrespondingSubnetMask");
 
     if(firstSubnetMask == DefaultSubnetMask(document.getElementById("firstField").value)){
-        firstSMCorrespondsImage.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png';
+        firstSMCorrespondsImage.src = trueImage;
     }
     else{
-        firstSMCorrespondsImage.src = 'https://icebag.fr/wp-content/uploads/2020/10/remove-300x300.png';
+        firstSMCorrespondsImage.src = falseImage;
     }
 
     if(secondSubnetMask == DefaultSubnetMask(document.getElementById("thirdField").value)){
-        secondSMCorrespondsImage.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png';
+        secondSMCorrespondsImage.src = trueImage;
     }
     else{
-        secondSMCorrespondsImage.src = 'https://icebag.fr/wp-content/uploads/2020/10/remove-300x300.png';
+        secondSMCorrespondsImage.src = falseImage;
     }
 
     let sameNetworkImage = document.getElementById("sameNetwork");
     if(detected1stIPClass == detected2ndIPClass){
         if(detected1stIPClass == "Classe A"){
-            let Octets1 = firstIP.split('.', 1)
-            let Octets2 = secondIP.split('.', 1)
-            console.log(Octets1 + ", " + Octets2);
+            let Octets1 = firstIP.split('.', 1).toString();
+            let Octets2 = secondIP.split('.', 1).toString();
+
+            console.log(detected1stIPClass + ": " + Octets1 + ", " + Octets2);
 
             if(Octets1 == Octets2){
                 console.log("Class A ==")
-                sameNetworkImage.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png';
+                sameNetworkImage.src = trueImage;
+            }
+            else{
+                sameNetworkImage.src = falseImage;
             }
         }
         else if(detected1stIPClass == "Classe B"){
-            let Octets1 = firstIP.split('.', 2)
-            let Octets2 = secondIP.split('.', 2)
-            console.log(Octets1 + ", " + Octets2);
+            let Octets1 = firstIP.split('.', 2).toString();
+            let Octets2 = secondIP.split('.', 2).toString();
+
+            console.log(detected1stIPClass + ": " + Octets1 + ", " + Octets2);
 
             if(Octets1 == Octets2){
                 console.log("Class B ==")
-                sameNetworkImage.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png';
+                sameNetworkImage.src = trueImage;
+            }
+            else{
+                sameNetworkImage.src = falseImage;
             }
         }
         else if(detected1stIPClass == "Classe C"){
-            let Octets1 = firstIP.split('.', 3)
-            let Octets2 = secondIP.split('.', 3)
-            console.log(Octets1);
-            console.log(Octets2);
+            let Octets1 = firstIP.split('.', 3).toString();
+            let Octets2 = secondIP.split('.', 3).toString();
+
+            console.log(detected1stIPClass + ": " + Octets1 + ", " + Octets2);
 
             if(Octets1 == Octets2){
-                console.log("Class 3 ==")
-                sameNetworkImage.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_tick_icon.svg/1200px-Flat_tick_icon.svg.png';
+                console.log("Class C ==")
+                sameNetworkImage.src = trueImage;
+            }
+            else{
+                sameNetworkImage.src = falseImage;
             }
         }
     }
     else{
-        sameNetworkImage.src = 'https://icebag.fr/wp-content/uploads/2020/10/remove-300x300.png';
+        sameNetworkImage.src = falseImage;
     }
 }
 
@@ -126,7 +141,7 @@ function IsAValidDottedDecimal(str){
 
 function FirstOctetToBinary(str){
     let firstOctet = parseInt(str.split('.', 1));
-    return firstOctet.toString(2);
+    return ("000000000" + firstOctet.toString(2)).substr(-8)
 }
 
 function StringToBinary(str){
@@ -136,9 +151,9 @@ function StringToBinary(str){
 
 function DetectIPClass(IP){
     let firstOctet = FirstOctetToBinary(IP);
-    console.log(firstOctet);
+    console.log("First octect in binary of " + IP + ": " + firstOctet);
 
-    let firstNumber = firstOctet.slice(1, 1); //FIX
+    let firstNumber = firstOctet.slice(0, 1);
     let firstTwoNumbers = firstOctet.slice(0, 2);
     let firstThreeNumbers = firstOctet.slice(0, 3);
 

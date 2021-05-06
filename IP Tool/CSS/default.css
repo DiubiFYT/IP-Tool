@@ -32,23 +32,17 @@ html, body{
 }
 
 .centerForm{
-    width: 500px;
-   height: 410px;
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   margin-left: -250px;
-   margin-top: -205px;
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .centerDiv{
-   Width: 2000px;
-   height: 1000px;
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   margin-left: -680px;
-   margin-top: -500px;
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .margintop{
