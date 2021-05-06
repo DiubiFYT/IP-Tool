@@ -16,48 +16,53 @@
                         <h1 class="text-center">IP Tool</h1>
                     </div>
                     <div class="form-group">
-                        <label>Primo IP</label>
+                        <label>Indirizzo IP</label>
                         <input type="text" class="form-control" value="192.168.1.1" id="firstField" placeholder="xxx.xxx.xxx.xxx">
-                    </div>
+                    </div>                   
+                    
                     <div class="form-group margintop">
-                        <label>Subnet mask</label>
-                        <input type="text" class="form-control" value="255.255.255.0" id="secondField" placeholder="xxx.xxx.xxx.xxx">
-                    </div>                    
-                    <div class="form-group margintop">
-                        <label>Secondo IP</label>
-                        <input type="text" class="form-control" value="192.168.1.2" id="thirdField" placeholder="xxx.xxx.xxx.xxx">
-                    </div>
-                    <div class="form-group margintop">
-                        <label>Subnet mask</label>
-                        <input type="text" class="form-control" value="255.255.255.0" id="fourthField" placeholder="xxx.xxx.xxx.xxx">
+                        <label>Numero sottoreti</label>
+                        <input type="text" class="form-control" value="6" id="secondField" placeholder="n">
                     </div>
                     <button type="button" onclick="CheckAndShowResults('results')" class="btn btn-primary btn-info" style="margin-top: 10px;">Calcola</button>
                 </div>              
             </form>           
         </div>
 
-        <div class="container bg-light roboto rounded centerDiv hidden" id="results" style="color: black;">
-            
+        <div class="container-sm bg-light roboto rounded centerDiv" id="results" style="color: black;">
             <button type="button" style="float: right;" onclick="window.location.reload()" class="btn btn-primary margintop">Reset</button>
-            <div class="container-fluid padding">
-                <h5>Classe di appartenenza del primo IP</h5>
-                <h2 value="" id="1stIPbelongsToWhichClass"></h2>
-                <br>
-                <h5>Classe di appartenenza del secondo IP</h5>
-                <h2 value="" id="2ndIPbelongsToWhichClass"></h2>
+            
+            <div class="container-sm padding">
+                <h5>Bit</h5>
+                <!--<h2 value="" id="1stIPbelongsToWhichClass"></h2>-->
             </div>
 
-            <div class="container-fluid padding">
-                <h5>La prima subnet mask da te inserita corrisponde con la subnet mask di default? <img style="display:inline-block" id="firstCorrespondingSubnetMask" width="3.5%"></h5>                
-                <br>
-                <h5>La seconda subnet mask da te inserita corrisponde con la subnet mask di default? <img style="display:inline-block" id="secondCorrespondingSubnetMask" width="3.5%"></h5>
+            <div class="container-sm padding">
+                <h5>Host massimi per ogni sottorete</h5>
             </div>
-            <div class="container-fluid padding">
-                <h5>I due indirizzi si trovano nella stessa rete? <img style="display:inline-block" id="sameNetwork" width="3.5%"></h5>
+
+            <div class="container-sm padding">
+                <h5 style="display: inline-flex; margin-right: 20px;">Indirizzo di rete<h5 style="display: inline-flex; margin-right: 20px;">Indirizzo di broadcast<h5 style="display: inline-flex;">Indirizzo di gateway</h5></h5></h5> <p></p>
+                <!--<h6 style="display: inline-flex; margin-right: 20px;">1.1.1.1<h6 style="display: inline-flex; margin-right: 20px;v">255.255.255.255<h6 style="display: inline-flex;">255.255.255.255</h6></h6></h6>-->
+            </div>
+
+            <div class="container-sm padding">
+                <canvas style="float: right;" id="chart"></canvas>
+            </div>
+
+            <div class="container-sm padding">
+                <h5>Indirizzi disponibili per ogni sottorete</h5>
+                <h3 value="" id="availableAddressesForEachSubnet"></h3>
+            </div>
+
+            <div class="container-sm padding">
+                <h5>Indirizzi assegnabili agli host</h5>
+                <table id="availableIPsTable"></table>
             </div>
         </div>
 
         <script src="../JS/Main.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
     </body>
 </html>
