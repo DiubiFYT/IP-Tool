@@ -141,12 +141,21 @@ function IsAValidDottedDecimal(str){
 
 function FirstOctetToBinary(str){
     let firstOctet = parseInt(str.split('.', 1));
-    return ("000000000" + firstOctet.toString(2)).substr(-8)
+    return OctectToBinary(firstOctet);
+}
+
+function OctectToBinary(octect){
+    return ("000000000" + octect.toString(2)).substr(-8);
 }
 
 function StringToBinary(str){
-    let firstOctet = parseInt(str.split('.'));
-    console.log(firstOctet.toString(2));
+    let octetc1 = parseInt(str.split('.', 1));
+    let octetc2 = parseInt(str.split('.', 2));
+    let octetc3 = parseInt(str.split('.', 3));
+    let octetc4 = parseInt(str.split('.', 4));
+
+    let binaryIp = OctectToBinary(octetc1) + "." + OctectToBinary(octetc2) + "." + OctectToBinary(octetc3) + "." + OctectToBinary(octetc4);
+    return binaryIp;
 }
 
 function DetectIPClass(IP){
