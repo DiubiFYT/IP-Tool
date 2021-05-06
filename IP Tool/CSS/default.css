@@ -12,15 +12,15 @@
 html, body{
     height: 100%;
     overflow: hidden;
-    background-image: url('https://wallpaperaccess.com/full/796863.jpg');
 }
 
-.parallax{
+.parallax {
     min-height: 100%;
     background-attachment: fixed;
     background-size: cover;
     background-position: 50% 50%;
     background-repeat: no-repeat;
+    background-image: url('https://wallpaperaccess.com/full/796863.jpg');
 }
 
 .paral h1 {

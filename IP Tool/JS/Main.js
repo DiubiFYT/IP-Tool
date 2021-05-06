@@ -42,11 +42,11 @@ function PrintResults(){
     let firstIP = document.getElementById("firstField").value;
     let secondIP = document.getElementById("thirdField").value;
 
-    let detected1stIPClass = DetectIPClass(document.getElementById("firstField").value);
+    let detected1stIPClass = DetectIPClass(firstIP);
     document.getElementById("1stIPbelongsToWhichClass").textContent = detected1stIPClass;
     console.log("First IP Class: " + detected1stIPClass);
 
-    let detected2ndIPClass = DetectIPClass(document.getElementById("thirdField").value);
+    let detected2ndIPClass = DetectIPClass(secondIP);
     document.getElementById("2ndIPbelongsToWhichClass").textContent = detected2ndIPClass;
     console.log("Second IP Class: " + detected2ndIPClass);
 
@@ -130,7 +130,7 @@ function IsNullOrWhiteSpace(str){
 }
 
 function IsAValidDottedDecimal(str){
-    let regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    let regex = /^(25[0-5]|2[0-4][0-9]|[1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
     if(regex.test(str)){
         return true;
     }
