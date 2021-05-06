@@ -71,3 +71,10 @@ html, body{
 .hidden{
     display: none !important;
 }
+
+.undertext{
+    position: absolute;
+    bottom: 5%;
+    right: 45%;
+    transform: translate(-50%, -50%);     
+}

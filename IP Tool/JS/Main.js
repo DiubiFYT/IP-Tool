@@ -6,7 +6,7 @@ function CheckAndShowResults(id){
     let secondField = document.getElementById("secondField").value;
 
     if(!IsNullOrWhiteSpace(firstField) && IsAValidDottedDecimal(firstField) 
-    && !IsNullOrWhiteSpace(secondField) && IsAValidDottedDecimal(secondField)){
+    && !IsNullOrWhiteSpace(secondField)){
 
         console.log(firstField + ", " + secondField);
         let e = document.getElementById(id);
@@ -38,13 +38,22 @@ function PrintResults(){
     let IP = document.getElementById("firstField").value;
 
     let IPClass = DetectIPClass(IP);
-    document.getElementById("IPbelongsToWhichClass").textContent = IPClass;
+    //document.getElementById("IPbelongsToWhichClass").textContent = IPClass;
     console.log("IP Class: " + IPClass);
 
     let nSubnets = document.getElementById("secondField").value;
     let IPSubnetMaskDefault = DefaultSubnetMask(IP);
 
-    let SubnetMaskBinary = GetSubnetMaskBinary(IP,nSubnets);
+    let SubnetMaskBinaryNetID = GetSubnetMaskBinary(IP, nSubnets, "Network");
+    let SubnetMaskBinarySubnetID = GetSubnetMaskBinary(IP, nSubnets, "Subnet");
+    let SubnetMaskBinaryHostID = GetSubnetMaskBinary(IP, nSubnets, "Host");
+
+
+    console.log(GetSubnetMaskBinary(IP, nSubnets, "All"));
+
+    document.getElementById("NetID").textContent = SubnetMaskBinaryNetID.toString();
+    document.getElementById("SubnetID").textContent = SubnetMaskBinarySubnetID.toString();
+    document.getElementById("HostID").textContent = SubnetMaskBinaryHostID.toString();
 }
 
 function IsNullOrWhiteSpace(str){
@@ -139,46 +148,93 @@ function GetDefaultNBitHost(IP){
 }
 
 function GetNSubnets(nSubnets){
-    let n = nSubnets;
+    let n = 0;
     let ex = 0;
-    while(nSubnets < n){
+
+    do{
         ex++;
         n = Math.pow(2, ex);
     }
+    while(n < nSubnets)
 
     return n;
 }
 
-function GetSubnetMaskBinary(IP, nSubnets){
+function GetSubnetMaskBinary(IP, nSubnets, whichOne){
 
     let nBitSubnet = Math.log2(GetNSubnets(nSubnets));
     let nBitHost = GetDefaultNBitHost(IP) - nBitSubnet;
     let nBitNetwork = 32 - nBitSubnet - nBitHost;
 
-    let str;
+    console.log("Bits subnet: " + nBitSubnet + ", bits host: " + nBitHost + ", bits net: " + nBitNetwork + ".")
+
+    let str = 
+    {
+        network: "",
+        subnet: "",
+        host: ""
+    }
+
+    if(whichOne == "All"){
     for(let i = 0; i < nBitNetwork; i++){
 
-        if(i % 8 == 0){
-            str +=".";
+        if(i % 8 == 0 && i != 0){
+            str.network +=".";
         }
-        str += "1";
+        str.network += "1";
     }
 
     for(let i = 0; i < nBitSubnet; i++){
 
         if(i % 8 == 0){
-            str +=".";
+            str.subnet +=".";
         }
-        str += "1";
+        str.subnet += "1";
     }
 
     for(let i = 0; i < nBitHost; i++){
 
-        if(i + nBitSubnet % 8 == 0){
-            str +=".";
+        if((i + nBitSubnet) % 8 == 0){            
+            str.host += ".";
         }
-        str += "0";
+        str.host += "0";
     }
 
-    return str;
+    return str.network + str.subnet + str.host;
+    }
+
+    else if(whichOne == "Network"){
+        for(let i = 0; i < nBitNetwork; i++){
+
+            if(i % 8 == 0 && i != 0){
+                str.network +=".";
+            }
+            str.network += "1";
+        }
+        return str.network;
+    }
+    else if(whichOne == "Subnet"){
+        for(let i = 0; i < nBitSubnet; i++){
+
+            if(i % 8 == 0){
+                str.subnet +=".";
+            }
+            str.subnet += "1";
+        }
+        return str.subnet;
+    }
+    else if(whichOne == "Host"){
+        for(let i = 0; i < nBitHost; i++){
+
+            if((i + nBitSubnet) % 8 == 0){            
+                str.host += ".";
+            }
+            str.host += "0";
+        }
+        return str.host;
+    }
+    else{
+        return console.error("Scegliere i tipi di dati da ritornare.")
+    }
+
 }

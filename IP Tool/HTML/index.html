@@ -29,16 +29,28 @@
             </form>           
         </div>
 
-        <div class="container-sm bg-light roboto rounded centerDiv" id="results" style="color: black;">
+        <div class="container-sm bg-light roboto rounded centerDiv hidden" id="results" style="color: black;">
             <button type="button" style="float: right;" onclick="window.location.reload()" class="btn btn-primary margintop">Reset</button>
             
             <div class="container-sm padding">
+                <h5>Nuova subnet mask</h5>
+                <h3 id="newSM"></h3>
+            </div>
+
+            <div class="container-sm padding">
                 <h5>Bit</h5>
-                <!--<h2 value="" id="1stIPbelongsToWhichClass"></h2>-->
+                <h3 style="display: inline-flex; background-color: rgb(110, 195, 223);" id="NetID">
+                    <span style="text-align: center;">p</span>
+                    <h3 style="display: inline-flex; background-color: lightcoral;" id="SubnetID">
+                        <h3 style="display: inline-flex; background-color: lightgreen;" id="HostID">
+                        </h3>
+                    </h3>
+                </h3>
             </div>
 
             <div class="container-sm padding">
                 <h5>Host massimi per ogni sottorete</h5>
+                <h3 id="maximumHostsForeachSubnet" value=""></h3>
             </div>
 
             <div class="container-sm padding">
