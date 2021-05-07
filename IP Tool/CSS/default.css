@@ -72,9 +72,34 @@ html, body{
     display: none !important;
 }
 
-.undertext{
-    position: absolute;
-    bottom: 5%;
-    right: 45%;
-    transform: translate(-50%, -50%);     
+button.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 10px;
+  }
+
+@media(min-width: 768px){
+    .resizetext{
+        font-size: 1.3vmin;
+    }
+}
+
+@media (max-width: 768px){
+    .nonewline{
+        white-space: nowrap;
+        overflow: scroll;
+    }
+
+    .mobilescrollable{
+        overflow-y: scroll;
+    }
+
+    .resizetextmobile{
+        font-size: 1.8vmin;
+    }
+
+    .smallerdivmobile{
+        height: 80%;
+        width: 90%;
+    }
 }

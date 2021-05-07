@@ -37,12 +37,12 @@ function PrintResults(){
 
     let IP = document.getElementById("firstField").value;
 
-    let IPClass = DetectIPClass(IP);
+    let IPClass = GetIPClass(IP);
     //document.getElementById("IPbelongsToWhichClass").textContent = IPClass;
     console.log("IP Class: " + IPClass);
 
     let nSubnets = document.getElementById("secondField").value;
-    let IPSubnetMaskDefault = DefaultSubnetMask(IP);
+    let IPSubnetMaskDefault = GetDefaultSubnetMask(IP);
 
     let SubnetMaskBinaryNetID = GetSubnetMaskBinary(IP, nSubnets, "Network");
     let SubnetMaskBinarySubnetID = GetSubnetMaskBinary(IP, nSubnets, "Subnet");
@@ -50,6 +50,8 @@ function PrintResults(){
 
 
     console.log(GetSubnetMaskBinary(IP, nSubnets, "All"));
+
+    document.getElementById("newSM").textContent = GetSubnetMask(IP, nSubnets);
 
     document.getElementById("NetID").textContent = SubnetMaskBinaryNetID.toString();
     document.getElementById("SubnetID").textContent = SubnetMaskBinarySubnetID.toString();
@@ -100,7 +102,7 @@ function IPToBinary(str){
     return binaryIP;
 }
 
-function DetectIPClass(IP){
+function GetIPClass(IP){
     let firstOctet = FirstOctetToBinary(IP);
     console.log("First octect in binary of " + IP + ": " + firstOctet);
 
@@ -119,8 +121,8 @@ function DetectIPClass(IP){
     }
 }
 
-function DefaultSubnetMask(IP){
-    let IPClass = DetectIPClass(IP);
+function GetDefaultSubnetMask(IP){
+    let IPClass = GetIPClass(IP);
 
     if(IPClass == "Classe A"){
         return "255.0.0.0";
@@ -134,7 +136,7 @@ function DefaultSubnetMask(IP){
 }
 
 function GetDefaultNBitHost(IP){
-    let IPClass = DetectIPClass(IP);
+    let IPClass = GetIPClass(IP);
 
     if(IPClass == "Classe A"){
         return 24;
@@ -236,5 +238,13 @@ function GetSubnetMaskBinary(IP, nSubnets, whichOne){
     else{
         return console.error("Scegliere i tipi di dati da ritornare.")
     }
+}
 
+function GetSubnetMask(IP, nSubnets){
+    let binarySM = GetSubnetMaskBinary(IP, nSubnets, "All");
+    let splittedSM = binarySM.split('.');
+
+    console.log(splittedSM);
+
+    return parseInt(splittedSM[0], 2) + "." + parseInt(splittedSM[1], 2) + "." + parseInt(splittedSM[2], 2) + "." + parseInt(splittedSM[3], 2);
 }
