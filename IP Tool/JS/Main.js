@@ -27,13 +27,21 @@ function CheckAndShowResults(id){
     }
 }
 
-/*function Reset(){
+async function Reset(){
     let resultsTab = document.getElementById("results");
 
-    setTimeout(() => {resultsTab.classList.add("fadeoutanim")},500);
-    resultsTab.classList.add("hidden");
     resultsTab.classList.remove("fadeinanim");
-}*/
+    resultsTab.classList.add("fadeoutanim")
+    await sleep(500);
+    resultsTab.classList.remove("fadeoutanim")
+    resultsTab.classList.add("hidden"); 
+}
+
+function sleep(ms) {
+    return new Promise(
+      resolve => setTimeout(resolve, ms)
+    );
+  }
 
 //Per mantenere il background fissato allo sfondo
 window.addEventListener('scroll',() => { 

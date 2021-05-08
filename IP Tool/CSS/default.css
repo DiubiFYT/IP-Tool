@@ -128,4 +128,8 @@ button.sticky {
         height: 80%;
         width: 90%;
     }
+
+    #FirstForm{
+        width: 90%;
+    }
 }
