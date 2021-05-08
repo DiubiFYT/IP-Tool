@@ -76,7 +76,33 @@ button.sticky {
     position: -webkit-sticky;
     position: sticky;
     top: 10px;
-  }
+}
+
+@keyframes fadein{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout{
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+
+.fadeinanim{
+    animation: fadein 0.5s;
+}
+
+.fadeoutanim{
+    animation: fadeout 0.5s;
+}
 
 @media(min-width: 768px){
     .resizetext{
@@ -87,7 +113,7 @@ button.sticky {
 @media (max-width: 768px){
     .nonewline{
         white-space: nowrap;
-        overflow: scroll;
+        overflow-x: scroll;
     }
 
     .mobilescrollable{

@@ -17,6 +17,7 @@ function CheckAndShowResults(id){
         //document.body.style.overflow = "auto";
         //document.getElementById('results').style.marginTop = "-1750px";
         e.classList.remove("hidden");
+        e.classList.add("fadeinanim");
         PrintResults();
 
     }
@@ -25,6 +26,14 @@ function CheckAndShowResults(id){
         alert("Compilare tutti i campi e controllare che i dati siano scritti in notazione dotted-decimal.");
     }
 }
+
+/*function Reset(){
+    let resultsTab = document.getElementById("results");
+
+    setTimeout(() => {resultsTab.classList.add("fadeoutanim")},500);
+    resultsTab.classList.add("hidden");
+    resultsTab.classList.remove("fadeinanim");
+}*/
 
 //Per mantenere il background fissato allo sfondo
 window.addEventListener('scroll',() => { 
