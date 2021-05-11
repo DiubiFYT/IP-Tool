@@ -73,6 +73,8 @@ function PrintResults(){
     document.getElementById("NetID").textContent = SubnetMaskBinaryNetID.toString();
     document.getElementById("SubnetID").textContent = SubnetMaskBinarySubnetID.toString();
     document.getElementById("HostID").textContent = SubnetMaskBinaryHostID.toString();
+
+    document.getElementById("maximumHostsForeachSubnet").textContent = GetNHost(IP, nSubnets);
 }
 
 function IsNullOrWhiteSpace(str){
@@ -264,4 +266,11 @@ function GetSubnetMask(IP, nSubnets){
     console.log(splittedSM);
 
     return parseInt(splittedSM[0], 2) + "." + parseInt(splittedSM[1], 2) + "." + parseInt(splittedSM[2], 2) + "." + parseInt(splittedSM[3], 2);
+}
+
+function GetNHost(IP, nSubnets){
+    let nBitSubnet = Math.log2(GetNSubnets(nSubnets));
+    let nBitHost = GetDefaultNBitHost(IP) - nBitSubnet;
+
+    return Math.pow(2,nBitHost) - 2;
 }
