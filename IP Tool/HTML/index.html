@@ -22,7 +22,7 @@
                     
                     <div class="form-group margintop">
                         <label>Numero sottoreti</label>
-                        <input type="text" class="form-control" onkeypress="CreateHostsTextBoxes();" value="6" id="secondField" placeholder="n">
+                        <input type="text" class="form-control" value="6" id="secondField" placeholder="n">
                     </div>                   
                 </div>      
                 
@@ -78,8 +78,10 @@
 
             <div class="container-fluid padding">
                 <div class="nonewline resizetext resizetextmobile">
-                   
-                   <div style="display: inline-block;">
+                   <table class="table" id="Table">
+                    <tr><th><h5>Indirizzo di rete</h5></th><th><h5>Indirizzo di broadcast</h5></th><th><h5>Indirizzo di gateway</h5></th></tr>
+                   </table>
+               <!--<div style="display: inline-block;">
                       <h5 style="margin-right: 20px;">Indirizzo di rete</h5>
                       <h3 style="text-align: center;" id="netAddress">1</h3>
                    </div>
@@ -92,7 +94,7 @@
                  <div style="display: inline-block;">
                     <h5 style="margin-right: 20px;">Indirizzo di gateway</h5>
                     <h3 style="text-align: center;" id="gatewayAddress">1</h3>
-                 </div>
+                 </div>-->
                 </div>
             </div>
 

@@ -6,7 +6,8 @@ function CheckAndShowResults(id){
     let secondField = document.getElementById("secondField").value;
 
     if(IsAValidDottedDecimal(firstField) 
-    && !IsNullOrWhiteSpace(secondField)){
+    && !IsNullOrWhiteSpace(secondField)
+    && IsAValidNSubnets(firstField, secondField)){
 
         console.log(firstField + ", " + secondField);
         let e = document.getElementById(id);
@@ -49,54 +50,6 @@ function sleep(ms) {
     );
 }
 
-function CreateHostsTextBoxes(){
-    let fields = document.getElementById("fields");
-    let textBoxes = [fields.getElementsByTagName("input")];
-    console.log(textBoxes);
-    //textBoxes.forEach(element => {
-    //    if(element.id.toString().includes("hostsForEachSubnet")){
-     //       document.removeChild(t);
-    //    }
-    //});
-    console.log("Creating TextBoxes...");
-    let nSubnets = parseInt(document.getElementById("secondField").value);
-    console.log("Num: " + nSubnets);
-
-    let div = document.createElement("div");
-    div.setAttribute("class", "form-group margintop")
-
-    let textBox = document.createElement("input");
-    textBox.setAttribute("type", "text");
-    textBox.setAttribute("class", "form-control");
-
-    for(let i = 0; i < nSubnets; i++){
-        console.log("lililol")
-        fields.appendChild(div);
-        textBox.removeAttribute("id");
-        textBox.removeAttribute("onkeypress");
-        textBox.setAttribute("id", "hostsForEachSubnet" + i);
-        textBox.setAttribute("onkeypress", "setInputFilter(document.getElementById(hostsForEachSubnet" + i + "), function(value){return /^[+]?\d+([.]\d+)?$/.test(value); });");
-        div.append(textBox);
-    }
-}
-
-function setInputFilter(textbox, inputFilter) {
-    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
-      textbox.addEventListener(event, function() {
-        if (inputFilter(this.value)) {
-          this.oldValue = this.value;
-          this.oldSelectionStart = this.selectionStart;
-          this.oldSelectionEnd = this.selectionEnd;
-        } else if (this.hasOwnProperty("oldValue")) {
-          this.value = this.oldValue;
-          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-        } else {
-          this.value = "";
-        }
-      });
-    });
-  }
-
 //Per mantenere il background fissato allo sfondo
 window.addEventListener('scroll',() => { 
     console.log('Scrolling...');
@@ -129,6 +82,18 @@ function PrintResults(){
     document.getElementById("HostID").textContent = SubnetMaskBinaryHostID.toString();
 
     document.getElementById("maximumHostsForeachSubnet").textContent = GetNHost(IP, nSubnets);
+
+    let SubnetsIps = GetAllSubnetsIps(IP, nSubnets);
+    let t = "<tr><th><h5>Indirizzo di rete</h5></th><th><h5>Indirizzo di broadcast</h5></th><th><h5>Indirizzo di gateway</h5></th></tr>";
+    for (let i = 0; i < SubnetsIps.length; i++){
+        let tr = "<tr>";
+        tr += "<td>" + SubnetsIps[i].networkIp + "</td>";
+        tr += "<td>" + SubnetsIps[i].broadcasIp + "</td>";
+        tr += "<td>" + SubnetsIps[i].gatewayIp + "</td>";
+        tr += "</tr>";
+        t += tr;
+    }
+    document.getElementById("Table").innerHTML = t;
 }
 
 function IsNullOrWhiteSpace(str){
@@ -148,6 +113,22 @@ function IsAValidDottedDecimal(str){
     else{
         return false;
     }
+}
+
+function IsAValidNSubnets(IP, nSubnets){
+    let IPClass = GetIPClass(IP);
+
+    if(IPClass == "Classe A" && nSubnets > 4194304){
+        return false;
+    }
+    else if(IPClass == "Classe B" && nSubnets > 16384){
+        return false;
+    }
+    else if(IPClass == "Classe C" && nSubnets > 64){
+        return false;
+    }
+
+    return true;
 }
 
 function FirstOctetToBinary(str){
@@ -327,4 +308,40 @@ function GetNHost(IP, nSubnets){
     let nBitHost = GetDefaultNBitHost(IP) - nBitSubnet;
 
     return Math.pow(2,nBitHost) - 2;
+}
+
+function GetAllSubnetsIps(IP, nSubnets){
+
+    let idk = IP.split(".");
+    
+    let ipTemp = idk[0] + "." + idk[1] + "." + idk[2] + ".";
+
+    let IPClass = GetIPClass(IP);
+
+    let nbitHostClass;
+    if(IPClass == "Classe A"){
+        nbitHostClass = 24;
+    }
+    else if(IPClass == "Classe B"){
+        nbitHostClass = 16;
+    }
+    else if(IPClass == "Classe C"){
+        nbitHostClass = 8;
+    }
+
+    let magicNumber = Math.pow(2,nbitHostClass - Math.log2(GetNSubnets(nSubnets)));
+
+    let subnetsIps = [];
+    for(let i = 0; i < GetNSubnets(nSubnets); i++){
+
+        var subnet={
+            networkIp: ipTemp + (i * magicNumber),
+            broadcasIp: ipTemp + ( (i * magicNumber) + (magicNumber - 1) ),
+            gatewayIp: ipTemp + ( (i * magicNumber) + 1),
+        }
+        subnetsIps[i] = subnet;
+    }
+    
+    console.log(subnetsIps);
+    return subnetsIps;
 }
