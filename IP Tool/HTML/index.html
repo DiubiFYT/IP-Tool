@@ -11,21 +11,24 @@
     <body>
         <div class="parallax">
             <form class="bg-dark text-white rounded centerForm padding paddingbottom" id="FirstForm">
-                <div class="robotolight row">
+                <div class="robotolight row" id="fields">
                     <div class="form-group">
                         <h1 class="text-center">IP Tool</h1>
                     </div>
                     <div class="form-group">
                         <label>Indirizzo IP</label>
                         <input type="text" class="form-control" value="192.168.1.1" id="firstField" placeholder="xxx.xxx.xxx.xxx">
-                    </div>                   
+                    </div>
                     
                     <div class="form-group margintop">
                         <label>Numero sottoreti</label>
-                        <input type="text" class="form-control" value="6" id="secondField" placeholder="n">
-                    </div>
-                    <button type="button" onclick="CheckAndShowResults('results')" class="btn btn-primary btn-info" style="margin-top: 10px;">Calcola</button>
-                </div>              
+                        <input type="text" class="form-control" onkeypress="CreateHostsTextBoxes();" value="6" id="secondField" placeholder="n">
+                    </div>                   
+                </div>      
+                
+                <div class="robotolight row">
+                <button type="button" onclick="CheckAndShowResults('results');" class="btn btn-primary btn-info" style="margin-top: 10px;">Calcola</button>
+                </div>
             </form>           
         </div>
 

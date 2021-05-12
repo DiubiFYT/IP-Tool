@@ -41,6 +41,54 @@ function sleep(ms) {
     return new Promise(
       resolve => setTimeout(resolve, ms)
     );
+}
+
+function CreateHostsTextBoxes(){
+    let fields = document.getElementById("fields");
+    let textBoxes = [fields.getElementsByTagName("input")];
+    console.log(textBoxes);
+    //textBoxes.forEach(element => {
+    //    if(element.id.toString().includes("hostsForEachSubnet")){
+     //       document.removeChild(t);
+    //    }
+    //});
+    console.log("Creating TextBoxes...");
+    let nSubnets = parseInt(document.getElementById("secondField").value);
+    console.log("Num: " + nSubnets);
+
+    let div = document.createElement("div");
+    div.setAttribute("class", "form-group margintop")
+
+    let textBox = document.createElement("input");
+    textBox.setAttribute("type", "text");
+    textBox.setAttribute("class", "form-control");
+
+    for(let i = 0; i < nSubnets; i++){
+        console.log("lililol")
+        fields.appendChild(div);
+        textBox.removeAttribute("id");
+        textBox.removeAttribute("onkeypress");
+        textBox.setAttribute("id", "hostsForEachSubnet" + i);
+        textBox.setAttribute("onkeypress", "setInputFilter(document.getElementById(hostsForEachSubnet" + i + "), function(value){return /^[+]?\d+([.]\d+)?$/.test(value); });");
+        div.append(textBox);
+    }
+}
+
+function setInputFilter(textbox, inputFilter) {
+    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+      textbox.addEventListener(event, function() {
+        if (inputFilter(this.value)) {
+          this.oldValue = this.value;
+          this.oldSelectionStart = this.selectionStart;
+          this.oldSelectionEnd = this.selectionEnd;
+        } else if (this.hasOwnProperty("oldValue")) {
+          this.value = this.oldValue;
+          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        } else {
+          this.value = "";
+        }
+      });
+    });
   }
 
 //Per mantenere il background fissato allo sfondo
