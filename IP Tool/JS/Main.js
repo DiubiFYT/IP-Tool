@@ -5,11 +5,12 @@ function CheckAndShowResults(id){
     let firstField = document.getElementById("firstField").value;
     let secondField = document.getElementById("secondField").value;
 
-    if(!IsNullOrWhiteSpace(firstField) && IsAValidDottedDecimal(firstField) 
+    if(IsAValidDottedDecimal(firstField) 
     && !IsNullOrWhiteSpace(secondField)){
 
         console.log(firstField + ", " + secondField);
         let e = document.getElementById(id);
+        let form = document.getElementById("FirstForm");
         console.log(e)
         //e.scrollIntoView({block: 'end', behavior: 'smooth', inline: 'nearest'});
         //e.scrollBy(0, -1000);
@@ -18,6 +19,8 @@ function CheckAndShowResults(id){
         //document.getElementById('results').style.marginTop = "-1750px";
         e.classList.remove("hidden");
         e.classList.add("fadeinanim");
+
+        form.classList.add("hidden");
         PrintResults();
 
     }
@@ -29,12 +32,15 @@ function CheckAndShowResults(id){
 
 async function Reset(){
     let resultsTab = document.getElementById("results");
+    let form = document.getElementById("FirstForm");
+
+    form.classList.remove("hidden");
 
     resultsTab.classList.remove("fadeinanim");
     resultsTab.classList.add("fadeoutanim")
     await sleep(500);
     resultsTab.classList.remove("fadeoutanim")
-    resultsTab.classList.add("hidden"); 
+    resultsTab.classList.add("hidden");
 }
 
 function sleep(ms) {
@@ -55,7 +61,7 @@ function PrintResults(){
     let IP = document.getElementById("firstField").value;
 
     let IPClass = GetIPClass(IP);
-    //document.getElementById("IPbelongsToWhichClass").textContent = IPClass;
+    document.getElementById("IPbelongsToWhichClass").textContent = IPClass;
     console.log("IP Class: " + IPClass);
 
     let nSubnets = document.getElementById("secondField").value;
