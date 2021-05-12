@@ -96,6 +96,10 @@ button.sticky {
     }
 }
 
+.scrollable{
+    overflow-y: auto;
+}
+
 .fadeinanim{
     animation: fadein 0.5s;
 }
