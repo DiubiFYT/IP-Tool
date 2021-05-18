@@ -338,8 +338,10 @@ function GetAllSubnetsIps(IP, nSubnets){
         }
     }
 
-    console.log(firstPartIP + "|" + secondPartIP);
- 
+    console.log(magicNumber);
+    //da sistemare (link un po' utile)
+    //https://community.infosecinstitute.com/discussion/67245/quick-subnetting-all-in-your-head#:~:text=To%20find%20the%20magic%20number,interesting%20octet%20in%20the%20mask.&text=Next%20you%20need%20to%20take,octet%20in%20the%20IP%20address.
+    //fare in modo che in alcuni casi bisgona tornare all'ottetto prima e fare ++
     let subnetsIps = [];
     for(let i = 0; i < GetNSubnets(nSubnets); i++){
 
