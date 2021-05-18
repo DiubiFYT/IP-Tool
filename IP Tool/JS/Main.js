@@ -56,6 +56,10 @@ window.addEventListener('scroll',() => {
     document.body.style.overflow = "visible";
 });
 
+var SubnetMaskBinaryNetID;
+var SubnetMaskBinarySubnetID;
+var SubnetMaskBinaryHostID;
+
 function PrintResults(){
     console.log("Printing...");
 
@@ -68,9 +72,9 @@ function PrintResults(){
     let nSubnets = document.getElementById("secondField").value;
     let IPSubnetMaskDefault = GetDefaultSubnetMask(IP);
 
-    let SubnetMaskBinaryNetID = GetSubnetMaskBinary(IP, nSubnets, "Network");
-    let SubnetMaskBinarySubnetID = GetSubnetMaskBinary(IP, nSubnets, "Subnet");
-    let SubnetMaskBinaryHostID = GetSubnetMaskBinary(IP, nSubnets, "Host");
+    SubnetMaskBinaryNetID = GetSubnetMaskBinary(IP, nSubnets, "Network");
+    SubnetMaskBinarySubnetID = GetSubnetMaskBinary(IP, nSubnets, "Subnet");
+    SubnetMaskBinaryHostID = GetSubnetMaskBinary(IP, nSubnets, "Host");
 
 
     console.log(GetSubnetMaskBinary(IP, nSubnets, "All"));
@@ -88,7 +92,7 @@ function PrintResults(){
     for (let i = 0; i < SubnetsIps.length; i++){
         let tr = "<tr>";
         tr += "<td>" + SubnetsIps[i].networkIp + "</td>";
-        tr += "<td>" + SubnetsIps[i].broadcasIp + "</td>";
+        tr += "<td>" + SubnetsIps[i].broadcastIp + "</td>";
         tr += "<td>" + SubnetsIps[i].gatewayIp + "</td>";
         tr += "</tr>";
         t += tr;
@@ -312,47 +316,93 @@ function GetNHost(IP, nSubnets){
 
 function GetAllSubnetsIps(IP, nSubnets){
 
-    let subnetMask = GetSubnetMask(IP, nSubnets);
-    let idkMask = subnetMask.split(".");
-    let idkIP = IP.split(".");
+    let idk = IP.split(".");
     
-    let magicNumber;
-    let index;
-    let firstPartIP = "";
-    let secondPartIP = "";
+    let ipTemp = idk[0] + "." + idk[1] + "." + idk[2] + ".";
 
-    for(let i = 0; i < idkMask.length; i++){
-        if(idkMask[i] != "255" && idkMask[i] != "0"){
-            magicNumber = 256 - idkMask[i];
-            index = i;
-            break;
-        }
+    let IPClass = GetIPClass(IP);
+
+    let nbitHostClass;
+    if(IPClass == "Classe A"){
+        nbitHostClass = 24;
+    }
+    else if(IPClass == "Classe B"){
+        nbitHostClass = 16;
+    }
+    else if(IPClass == "Classe C"){
+        nbitHostClass = 8;
     }
 
-    for(let i = 0; i < idkIP.length; i++){
-        if(i < index){
-            firstPartIP += idkIP[i] + ".";
-        }
-        else if (i > index){
-            secondPartIP += "." + idkIP[i];
-        }
+    
+    let magicNumber = Math.pow(2,nbitHostClass - Math.log2(GetNSubnets(nSubnets)));
+
+    
+    if(magicNumber > 255){
+        magicNumber = 255;
     }
-    console.log(firstPartIP + " | " + secondPartIP);
-    console.log(magicNumber);
-    //da sistemare (link un po' utile)
-    //https://community.infosecinstitute.com/discussion/67245/quick-subnetting-all-in-your-head#:~:text=To%20find%20the%20magic%20number,interesting%20octet%20in%20the%20mask.&text=Next%20you%20need%20to%20take,octet%20in%20the%20IP%20address.
-    //Casi speciali (tipo):
-    //fare in modo che in alcuni casi bisgona tornare all'ottetto prima e incrementare di 1 e poi ricominciare
-    //fare in modo tale che l'indirizzo di gateway prendi uno giusto e non solo quello dopo ( magic number = 2) spostarsi all'ottetto successivo
+
+    console.log(GetNSubnets(nSubnets));
+    console.log(nbitHostClass - Math.log2(GetNSubnets(nSubnets)));
+    console.log("Magic number: " + magicNumber);
+
     let subnetsIps = [];
     for(let i = 0; i < GetNSubnets(nSubnets); i++){
 
         var subnet={
-            networkIp: firstPartIP + (i * magicNumber) + secondPartIP,
-            broadcasIp: firstPartIP + ( (i * magicNumber) + (magicNumber - 1) ) + secondPartIP,
-            gatewayIp: firstPartIP + ( (i * magicNumber) + 1) + secondPartIP,
+            networkIp: ipTemp + (i * magicNumber),
+            broadcastIp: ipTemp + ( (i * magicNumber) + (magicNumber - 1) ),
+            gatewayIp: ipTemp + ( (i * magicNumber) + 1),
         }
+        subnetsIps[i] = subnet;
+    }
+    
+    console.log(subnetsIps);
+    return subnetsIps;
+}
 
+function GetAllSubnetsIpsNew(IP, nSubnets){
+
+    let idk = IP.split(".");
+    
+    let ipTemp = idk[0] + "." + idk[1] + "." + idk[2] + ".";
+
+    let IPClass = GetIPClass(IP);
+
+    let nbitHostClass;
+    if(IPClass == "Classe A"){
+        nbitHostClass = 24;
+    }
+    else if(IPClass == "Classe B"){
+        nbitHostClass = 16;
+    }
+    else if(IPClass == "Classe C"){
+        nbitHostClass = 8;
+    }
+
+    let magicNumber = Math.pow(2,nbitHostClass - Math.log2(GetNSubnets(nSubnets)));
+
+    if(magicNumber > 255){
+        magicNumber = 255;
+    }
+
+    let subnetCombinations = [];
+
+    for(let i=0; i < nSubnets; i++){
+
+    }
+
+    console.log(GetNSubnets(nSubnets));
+    console.log(nbitHostClass - Math.log2(GetNSubnets(nSubnets)));
+    console.log("Magic number: " + magicNumber);
+
+    let subnetsIps = [];
+    for(let i = 0; i < GetNSubnets(nSubnets); i++){
+
+        var subnet={
+            networkIp: ipTemp + (i * magicNumber),
+            broadcastIp: ipTemp + ( (i * magicNumber) + (magicNumber - 1) ),
+            gatewayIp: ipTemp + ( (i * magicNumber) + 1),
+        }
         subnetsIps[i] = subnet;
     }
     
