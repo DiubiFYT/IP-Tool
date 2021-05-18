@@ -312,32 +312,41 @@ function GetNHost(IP, nSubnets){
 
 function GetAllSubnetsIps(IP, nSubnets){
 
-    let idk = IP.split(".");
+    let subnetMask = GetSubnetMask(IP, nSubnets);
+    let idkMask = subnetMask.split(".");
+    let idkIP = IP.split(".");
     
-    let ipTemp = idk[0] + "." + idk[1] + "." + idk[2] + ".";
+    let magicNumber;
+    let index;
+    let firstPartIP = "";
+    let secondPartIP = "";
 
-    let IPClass = GetIPClass(IP);
-
-    let nbitHostClass;
-    if(IPClass == "Classe A"){
-        nbitHostClass = 24;
-    }
-    else if(IPClass == "Classe B"){
-        nbitHostClass = 16;
-    }
-    else if(IPClass == "Classe C"){
-        nbitHostClass = 8;
+    for(let i = 0; i < idkMask.length; i++){
+        if(idkMask[i] != "255" && idkMask[i] != "0"){
+            magicNumber = 256 - idkMask[i];
+            index = i;
+            break;
+        }
     }
 
-    let magicNumber = Math.pow(2,nbitHostClass - Math.log2(GetNSubnets(nSubnets)));
+    for(let i = 0; i < idkIP.length; i++){
+        if(i < index){
+            firstPartIP += idkIP[i] + ".";
+        }
+        else if (i > index){
+            secondPartIP += "." + idkIP[i];
+        }
+    }
 
+    console.log(firstPartIP + "|" + secondPartIP);
+ 
     let subnetsIps = [];
     for(let i = 0; i < GetNSubnets(nSubnets); i++){
 
         var subnet={
-            networkIp: ipTemp + (i * magicNumber),
-            broadcasIp: ipTemp + ( (i * magicNumber) + (magicNumber - 1) ),
-            gatewayIp: ipTemp + ( (i * magicNumber) + 1),
+            networkIp: firstPartIP + (i * magicNumber) + secondPartIP,
+            broadcasIp: firstPartIP + ( (i * magicNumber) + (magicNumber - 1) ) + secondPartIP,
+            gatewayIp: firstPartIP + ( (i * magicNumber) + 1) + secondPartIP,
         }
         subnetsIps[i] = subnet;
     }
