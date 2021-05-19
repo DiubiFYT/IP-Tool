@@ -347,7 +347,7 @@ function GetAllSubnetsIps(IP, nSubnets){
     //fare in modo che in alcuni casi bisgona tornare all'ottetto prima e incrementare di 1 e poi ricominciare
     //fare in modo tale che l'indirizzo di gateway prendi uno giusto e non solo quello dopo ( magic number = 2) spostarsi all'ottetto successivo
     let subnetsIps = [];
-    for(let i = 0; i < GetNSubnets(nSubnets); i++){
+    for(let i = 0; i < nSubnets; i++){
 
         var subnet={
             networkIp: firstPartIP + (i * magicNumber) + secondPartIP,
