@@ -84,12 +84,14 @@ function PrintResults(){
     document.getElementById("maximumHostsForeachSubnet").textContent = GetNHost(IP, nSubnets);
 
     let SubnetsIps = GetAllSubnetsIps(IP, nSubnets);
-    let t = "<tr><th><h5>Indirizzo di rete</h5></th><th><h5>Indirizzo di broadcast</h5></th><th><h5>Indirizzo di gateway</h5></th></tr>";
+    let ranges = GetRange(SubnetsIps);
+    let t = "<tr><th><h5>Indirizzo di rete</h5></th><th><h5>Indirizzo di broadcast</h5></th><th><h5>Indirizzo di gateway</h5></th><th><h5>Range</h5></th></tr>";
     for (let i = 0; i < SubnetsIps.length; i++){
         let tr = "<tr>";
         tr += "<td>" + SubnetsIps[i].networkIp + "</td>";
         tr += "<td>" + SubnetsIps[i].broadcasIp + "</td>";
         tr += "<td>" + SubnetsIps[i].gatewayIp + "</td>";
+        tr += "<td>" + ranges[i] + "</td>";
         tr += "</tr>";
         t += tr;
     }
@@ -358,4 +360,29 @@ function GetAllSubnetsIps(IP, nSubnets){
     
     console.log(subnetsIps);
     return subnetsIps;
+}
+
+function GetRange(subnets){
+    let ranges = [];
+    for(let i=0; i<subnets.length; i++){
+        let networkAddress = subnets[i].networkIp;
+
+        let splittedNetworkAddress = networkAddress.split('.');
+        let lastNetworkOctect = parseInt(splittedNetworkAddress[3]) + 1;
+        if(lastNetworkOctect == subnets[i].gatewayIp.split('.')[3]){
+            lastNetworkOctect = parseInt(lastNetworkOctect) + 1;
+        }
+
+        let firstRange = splittedNetworkAddress[0] + "." + splittedNetworkAddress[1] + "." + splittedNetworkAddress[2] + "." + lastNetworkOctect;
+
+        let broadcastAddress = subnets[i].broadcasIp;
+        let splittedBroadcastAddress = broadcastAddress.split('.');
+        let lastBroadcastOctect = parseInt(splittedBroadcastAddress[3]) - 1;
+
+        let lastRange = splittedBroadcastAddress[0] + "." + splittedBroadcastAddress[1] + "." + splittedBroadcastAddress[2] + "." + lastBroadcastOctect;
+
+        ranges[i] = firstRange + " - " + lastRange;
+    }
+
+    return ranges;
 }
