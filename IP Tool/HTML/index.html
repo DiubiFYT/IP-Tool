@@ -10,7 +10,7 @@
 
     <body>
         <div class="parallax">
-            <form class="bg-dark text-white rounded centerForm padding paddingbottom" id="FirstForm">
+            <form class="bg-dark text-white rounded centerForm padding paddingbottom scrollable mobilescrollable" id="FirstForm" style="max-height: 80vh;">
                 <div class="robotolight row" id="fields">
                     <div class="form-group">
                         <h1 class="text-center">IP Tool</h1>
@@ -22,7 +22,7 @@
                     
                     <div class="form-group margintop">
                         <label>Numero sottoreti</label>
-                        <input type="text" class="form-control" value="6" id="secondField" placeholder="n">
+                        <input type="text" class="form-control" value="6" onkeyup="GenerateHostsTextBoxes();" id="secondField" placeholder="n">
                     </div>                   
                 </div>      
                 
@@ -98,9 +98,9 @@
                 </div>
             </div>
 
-            <div class="container-fluid padding">
+            <!--<div class="container-fluid padding">
                 <canvas id="chart"></canvas>
-            </div>
+            </div>-->
 
             <div class="container-fluid padding">
                 <h5>Indirizzi disponibili per ogni sottorete</h5>

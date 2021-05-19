@@ -9,6 +9,16 @@ function CheckAndShowResults(id){
     && !IsNullOrWhiteSpace(secondField)
     && IsAValidNSubnets(firstField, secondField)){
 
+        if(firstField.split('.')[0] > 223){
+            alert("Inserire un indirizzo IP tra le classi A, B o C.");
+            return;
+        }
+
+        if(secondField == 0){
+            alert("Non puoi inserire 0 sottoreti.");
+            return;
+        }
+
         console.log(firstField + ", " + secondField);
         let e = document.getElementById(id);
         let form = document.getElementById("FirstForm");
@@ -55,6 +65,47 @@ window.addEventListener('scroll',() => {
     console.log('Scrolling...');
     document.body.style.overflow = "visible";
 });
+
+function GenerateHostsTextBoxes(){
+    let nSubnets = document.getElementById("secondField").value;
+
+    if(nSubnets != ""){
+        console.log("Generating textboxes...");
+        let parallaxDivDivs = document.getElementsByTagName("div");
+        Array.from(parallaxDivDivs).forEach(element => {
+            if(element.id.includes("hostsDiv")){
+                element.remove();
+            }
+        });
+
+        for(let i=0; i<nSubnets; i++){
+            let textBoxDiv = document.createElement("div");
+            textBoxDiv.classList.add("form-group");
+            textBoxDiv.classList.add("margintop");
+            textBoxDiv.id = "hostsDiv" + (i + 1);
+    
+            let label = document.createElement("label");
+            label.textContent = "Host per subnet " + (i + 1);
+            textBoxDiv.appendChild(label);
+    
+            let textBox = document.createElement("input");
+            textBox.type = "text";
+            textBox.id = "hostsSubnet" +  (i + 1);
+            textBox.classList.add("form-control");
+            textBoxDiv.appendChild(textBox);
+
+            document.getElementById("fields").appendChild(textBoxDiv);
+        }
+    }
+    else{
+        let parallaxDivDivs = document.getElementsByTagName("div");
+        Array.from(parallaxDivDivs).forEach(element => {
+            if(element.id.includes("hostsDiv")){
+                element.remove();
+            }
+        });
+    }
+}
 
 function PrintResults(){
     console.log("Printing...");
