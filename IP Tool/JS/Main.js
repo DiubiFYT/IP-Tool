@@ -135,14 +135,15 @@ function PrintResults(){
     document.getElementById("maximumHostsForeachSubnet").textContent = GetNHost(IP, nSubnets);
 
     let SubnetsIps = GetAllSubnetsIps(IP, nSubnets);
-    let ranges = GetRange(SubnetsIps);
+    let ranges = GetRange(IP, SubnetsIps, nSubnets);
     let t = "<tr><th><h5>Indirizzo di rete</h5></th><th><h5>Indirizzo di broadcast</h5></th><th><h5>Indirizzo di gateway</h5></th><th><h5>Range</h5></th></tr>";
     for (let i = 0; i < SubnetsIps.length; i++){
         let tr = "<tr>";
         tr += "<td>" + SubnetsIps[i].networkIp + "</td>";
         tr += "<td>" + SubnetsIps[i].broadcasIp + "</td>";
         tr += "<td>" + SubnetsIps[i].gatewayIp + "</td>";
-        tr += "<td>" + ranges[i] + "</td>";
+        tr += '<td class="tooltipx">' + ranges[i].innerHTML + '</td>';
+        //tr += "<span class='tooltip'> caca </span>"
         tr += "</tr>";
         t += tr;
     }
@@ -413,8 +414,10 @@ function GetAllSubnetsIps(IP, nSubnets){
     return subnetsIps;
 }
 
-function GetRange(subnets){
+function GetRange(IP, subnets, nSubnets){
     let ranges = [];
+    let subnetsNHost = GetSubnetsHosts();
+
     for(let i=0; i<subnets.length; i++){
         let networkAddress = subnets[i].networkIp;
 
@@ -432,8 +435,53 @@ function GetRange(subnets){
 
         let lastRange = splittedBroadcastAddress[0] + "." + splittedBroadcastAddress[1] + "." + splittedBroadcastAddress[2] + "." + lastBroadcastOctect;
 
-        ranges[i] = firstRange + " - " + lastRange;
+        let string = document.createElement("td");
+        string.textContent = firstRange + " - " + lastRange;
+        //string.classList.add("tooltip")
+
+        let tooltip = document.createElement("span");
+        tooltip.classList.add("tooltiptextx");
+        tooltip.classList.add("nonewline");
+
+        let subnetMask = GetSubnetMask(IP, nSubnets);
+        let idkMask = subnetMask.split(".");
+        let index;
+    
+        for(let i = 0; i < idkMask.length; i++){
+            if(idkMask[i] != "255" && idkMask[i] != "0"){
+                index = i;
+                break;
+            }
+        }
+let finalipfica;
+        for(let i = 0; i < splittedNetworkAddress.length; i++){
+            if(index == i){
+                finalipfica += subnetsNHost[i] + ".";
+            }else if (index == splittedNetworkAddress.length){
+                finalipfica+= splittedNetworkAddress[i];
+            }else{
+                finalipfica+= splittedNetworkAddress[i] + ".";
+            }
+        }
+        tooltip.textContent = networkAddress + "-" + finalipfica;
+
+        string.appendChild(tooltip);
+
+        ranges[i] = string;
     }
 
     return ranges;
+}
+
+function GetSubnetsHosts(){
+    let data = [];
+    let counter = 0;
+    let textboxes = document.getElementsByTagName("input");
+    Array.from(textboxes).forEach(element => {
+        if(element.id.includes("hostsSubnet")){
+            data[counter] = element.value;
+            counter++;
+        }
+    })
+    return data;
 }
