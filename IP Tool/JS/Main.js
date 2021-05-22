@@ -136,13 +136,14 @@ function PrintResults(){
 
     let SubnetsIps = GetAllSubnetsIps(IP, nSubnets);
     let ranges = GetRange(IP, SubnetsIps, nSubnets);
+    let usedHosts = GetUsedHosts(IP, SubnetsIps, nSubnets)
     let t = "<tr><th><h5>Indirizzo di rete</h5></th><th><h5>Indirizzo di broadcast</h5></th><th><h5>Indirizzo di gateway</h5></th><th><h5>Range</h5></th></tr>";
     for (let i = 0; i < SubnetsIps.length; i++){
         let tr = "<tr>";
         tr += "<td>" + SubnetsIps[i].networkIp + "</td>";
         tr += "<td>" + SubnetsIps[i].broadcasIp + "</td>";
         tr += "<td>" + SubnetsIps[i].gatewayIp + "</td>";
-        tr += '<td class="tooltipx">' + ranges[i].innerHTML + '</td>';
+        tr += '<td class="tooltipx">' + ranges[i].innerHTML + '<span class="tooltiptextx nonewline">' + usedHosts[i].innerHTML + '</span></td>';
         //tr += "<span class='tooltip'> caca </span>"
         tr += "</tr>";
         t += tr;
@@ -436,12 +437,7 @@ function GetRange(IP, subnets, nSubnets){
         let lastRange = splittedBroadcastAddress[0] + "." + splittedBroadcastAddress[1] + "." + splittedBroadcastAddress[2] + "." + lastBroadcastOctect;
 
         let string = document.createElement("td");
-        string.textContent = firstRange + " - " + lastRange;
-        //string.classList.add("tooltip")
-
-        let tooltip = document.createElement("span");
-        tooltip.classList.add("tooltiptextx");
-        tooltip.classList.add("nonewline");
+        string.textContent = firstRange + " - " + lastRange;       
 
         let subnetMask = GetSubnetMask(IP, nSubnets);
         let idkMask = subnetMask.split(".");
@@ -453,24 +449,61 @@ function GetRange(IP, subnets, nSubnets){
                 break;
             }
         }
-let finalipfica;
-        for(let i = 0; i < splittedNetworkAddress.length; i++){
-            if(index == i){
-                finalipfica += subnetsNHost[i] + ".";
-            }else if (index == splittedNetworkAddress.length){
-                finalipfica+= splittedNetworkAddress[i];
-            }else{
-                finalipfica+= splittedNetworkAddress[i] + ".";
-            }
-        }
-        tooltip.textContent = networkAddress + "-" + finalipfica;
-
-        string.appendChild(tooltip);
-
+        
         ranges[i] = string;
     }
 
     return ranges;
+}
+
+function GetUsedHosts(IP, subnets, nSubnets){
+    let ranges = [];
+    let subnetsNHost = GetSubnetsHosts();
+    let count = 0;
+
+    for(let i=0; i<subnetsNHost[count]; i++){
+
+        let networkAddress = subnets[i].networkIp;
+
+        let splittedNetworkAddress = networkAddress.split('.');
+        let lastNetworkOctect = parseInt(splittedNetworkAddress[3]) + 1;
+        if(lastNetworkOctect == subnets[i].gatewayIp.split('.')[3]){
+            lastNetworkOctect = parseInt(lastNetworkOctect) + 1;
+        }
+
+        let firstRange = splittedNetworkAddress[0] + "." + splittedNetworkAddress[1] + "." + splittedNetworkAddress[2] + "." + lastNetworkOctect;
+
+        let tooltip = document.createElement("span");
+
+        let broadcastAddress = subnets[i].broadcasIp;
+        let splittedBroadcastAddress = broadcastAddress.split('.');
+
+        if(subnetsNHost[i] != 1){
+            let lastUsedHosts = splittedBroadcastAddress[0] + "." + splittedBroadcastAddress[1] + "." + splittedBroadcastAddress[2] + "." + parseInt((parseInt(subnetsNHost[i]) + parseInt(firstRange.split('.')[3])) - 1);
+    
+            tooltip.textContent = "Range di host utilizzati: " + firstRange + " - " + lastUsedHosts;
+        }
+        else{
+            tooltip.textContent = "Host utilizzato:" + firstRange;
+        }
+
+        let subnetMask = GetSubnetMask(IP, nSubnets);
+        let idkMask = subnetMask.split(".");
+        let index;
+    
+        for(let i = 0; i < idkMask.length; i++){
+            if(idkMask[i] != "255" && idkMask[i] != "0"){
+                index = i;
+                break;
+            }
+        }
+        //let finalipfica = "";
+        ranges[i] = tooltip;
+        count++;
+    }
+
+    return ranges;
+    
 }
 
 function GetSubnetsHosts(){

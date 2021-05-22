@@ -116,7 +116,7 @@ button.sticky {
   
   .tooltipx .tooltiptextx {
     visibility: hidden;
-    width: 120px;
+    width: 240px;
     background-color: black;
     color: #fff;
     text-align: center;
@@ -126,7 +126,7 @@ button.sticky {
     z-index: 1;
     bottom: 150%;
     left: 50%;
-    margin-left: -60px;
+    margin-left: -120px;
 
     word-wrap: break-word;
 
