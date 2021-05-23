@@ -374,7 +374,6 @@ function GetAllSubnetsIps(IP, nSubnets){
     let magicNumber;
     let index;
     let firstPartIP = "";
-    let secondPartIP = "";
 
     for(let i = 0; i < idkMask.length; i++){
         if(idkMask[i] != "255" && idkMask[i] != "0"){
@@ -384,16 +383,32 @@ function GetAllSubnetsIps(IP, nSubnets){
         }
     }
 
-    for(let i = 0; i < idkIP.length; i++){
-        if(i < index){
-            firstPartIP += idkIP[i] + ".";
-        }
-        else if (i > index){
-            secondPartIP += "." + idkIP[i];
+    for(let i = 0; i < index; i++){
+        firstPartIP += idkIP[i] + ".";
+    }
+
+    let nOctectMissing = 4 - (index + 1);
+    let secondPartNetworkIp = "";
+    let secondPartBroadcastIp = "";
+    let secondPartGatewayIp = "";
+    for(let i = 0; i < nOctectMissing; i++){
+
+        if(i == nOctectMissing - 1){
+            secondPartNetworkIp += ".0";
+            secondPartBroadcastIp += ".255";
+            secondPartGatewayIp += ".1";
+        }else{
+            secondPartNetworkIp += ".0";
+            secondPartBroadcastIp += ".255";
+            secondPartGatewayIp += ".0";
         }
     }
-    console.log(firstPartIP + " | " + secondPartIP);
-    console.log(magicNumber);
+
+    if(GetIPClass(IP) == "Classe C"){
+        secondPartGatewayIp = 1;
+    }
+
+    console.log("index: " + index + ". nOctectMissing: " + nOctectMissing + ". magic number: " + magicNumber);
     //da sistemare (link un po' utile)
     //https://community.infosecinstitute.com/discussion/67245/quick-subnetting-all-in-your-head#:~:text=To%20find%20the%20magic%20number,interesting%20octet%20in%20the%20mask.&text=Next%20you%20need%20to%20take,octet%20in%20the%20IP%20address.
     //Casi speciali (tipo):
@@ -402,10 +417,10 @@ function GetAllSubnetsIps(IP, nSubnets){
     let subnetsIps = [];
     for(let i = 0; i < nSubnets; i++){
 
-        var subnet={
-            networkIp: firstPartIP + (i * magicNumber) + secondPartIP,
-            broadcasIp: firstPartIP + ( (i * magicNumber) + (magicNumber - 1) ) + secondPartIP,
-            gatewayIp: firstPartIP + ( (i * magicNumber) + 1) + secondPartIP,
+        var subnet = {
+            networkIp: firstPartIP + (i * magicNumber) + secondPartNetworkIp,
+            broadcasIp: firstPartIP + ( (i * magicNumber) + (magicNumber - 1) ) + secondPartBroadcastIp,
+            gatewayIp: firstPartIP + ((i * magicNumber) + secondPartGatewayIp),
             usedIps: []
         }
 
@@ -420,7 +435,7 @@ function GetRange(IP, subnets, nSubnets){
     let ranges = [];
     let subnetsNHost = GetSubnetsHosts();
 
-    for(let i=0; i<subnetsNHost.length; i++){
+    for(let i = 0; i < subnetsNHost.length; i++){
         let networkAddress = subnets[i].networkIp;
 
         let splittedNetworkAddress = networkAddress.split('.');
@@ -461,41 +476,47 @@ function GetUsedHosts(IP, subnets, nSubnets){
     let ranges = [];
     let subnetsNHost = GetSubnetsHosts();
 
-    for(let i=0; i<subnetsNHost.length; i++){
+    let subnetMask = GetSubnetMask(IP, nSubnets);
+    let idkMask = subnetMask.split(".");
+    let index;
 
-        let networkAddress = subnets[i].networkIp;
+    for(let i = 0; i < idkMask.length; i++){
+        if(idkMask[i] != "255" && idkMask[i] != "0"){
+            index = i;
+            break;
+        }
+    }
 
-        let splittedNetworkAddress = networkAddress.split('.');
-        let lastNetworkOctect = parseInt(splittedNetworkAddress[3]) + 1;
-        if(lastNetworkOctect == subnets[i].gatewayIp.split('.')[3]){
-            lastNetworkOctect = parseInt(lastNetworkOctect) + 1;
+    for(let i = 0; i < subnetsNHost.length; i++){
+
+        let gatewayIp = subnets[i].gatewayIp;
+
+        let gatewayIpSplitted = gatewayIp.split(".");
+        let firstRange = "";
+        for(let j = 0; j < 4; j++){
+            if(j != index){
+                firstRange += parseInt(gatewayIpSplitted[j]) + ".";
+            }else{
+                firstRange += parseInt(gatewayIpSplitted[j]) + 1;
+            }
         }
 
-        let firstRange = splittedNetworkAddress[0] + "." + splittedNetworkAddress[1] + "." + splittedNetworkAddress[2] + "." + lastNetworkOctect;
+        let secondRange = "";
+        for(let j = 0; j < 4; j++){
+            if(j != index){
+                secondRange += parseInt(gatewayIpSplitted[j]) + ".";
+            }else{
+                secondRange += parseInt(gatewayIpSplitted[j]) + parseInt(subnetsNHost[i]);
+            }
+        }
 
         let tooltip = document.createElement("span");
 
-        let broadcastAddress = subnets[i].broadcasIp;
-        let splittedBroadcastAddress = broadcastAddress.split('.');
-
         if(subnetsNHost[i] != 1){
-            let lastUsedHosts = splittedBroadcastAddress[0] + "." + splittedBroadcastAddress[1] + "." + splittedBroadcastAddress[2] + "." + parseInt((parseInt(subnetsNHost[i]) + parseInt(firstRange.split('.')[3])) - 1);
-    
-            tooltip.textContent = "Range di host utilizzati: " + firstRange + " - " + lastUsedHosts;
+            tooltip.textContent = "Range di host utilizzati: " + firstRange + " - " + secondRange;
         }
         else{
             tooltip.textContent = "Host utilizzato:" + firstRange;
-        }
-
-        let subnetMask = GetSubnetMask(IP, nSubnets);
-        let idkMask = subnetMask.split(".");
-        let index;
-    
-        for(let i = 0; i < idkMask.length; i++){
-            if(idkMask[i] != "255" && idkMask[i] != "0"){
-                index = i;
-                break;
-            }
         }
         //let finalipfica = "";
         ranges[i] = tooltip;
