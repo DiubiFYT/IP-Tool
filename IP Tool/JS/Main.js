@@ -406,6 +406,7 @@ function GetAllSubnetsIps(IP, nSubnets){
             networkIp: firstPartIP + (i * magicNumber) + secondPartIP,
             broadcasIp: firstPartIP + ( (i * magicNumber) + (magicNumber - 1) ) + secondPartIP,
             gatewayIp: firstPartIP + ( (i * magicNumber) + 1) + secondPartIP,
+            usedIps: []
         }
 
         subnetsIps[i] = subnet;
@@ -419,7 +420,7 @@ function GetRange(IP, subnets, nSubnets){
     let ranges = [];
     let subnetsNHost = GetSubnetsHosts();
 
-    for(let i=0; i<subnets.length; i++){
+    for(let i=0; i<subnetsNHost.length; i++){
         let networkAddress = subnets[i].networkIp;
 
         let splittedNetworkAddress = networkAddress.split('.');
@@ -459,9 +460,8 @@ function GetRange(IP, subnets, nSubnets){
 function GetUsedHosts(IP, subnets, nSubnets){
     let ranges = [];
     let subnetsNHost = GetSubnetsHosts();
-    let count = 0;
 
-    for(let i=0; i<subnetsNHost[count]; i++){
+    for(let i=0; i<subnetsNHost.length; i++){
 
         let networkAddress = subnets[i].networkIp;
 
@@ -499,7 +499,6 @@ function GetUsedHosts(IP, subnets, nSubnets){
         }
         //let finalipfica = "";
         ranges[i] = tooltip;
-        count++;
     }
 
     return ranges;
