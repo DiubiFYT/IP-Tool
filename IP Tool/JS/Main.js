@@ -2,8 +2,8 @@ var trueImage = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flat_
 var falseImage = 'https://icebag.fr/wp-content/uploads/2020/10/remove-300x300.png';
 
 function CheckAndShowResults(id){
-    let firstField = document.getElementById("firstField").value;
-    let secondField = document.getElementById("secondField").value;
+    let firstField = document.getElementById("firstField").value.trim();
+    let secondField = document.getElementById("secondField").value.trim();
 
     if(IsAValidDottedDecimal(firstField) 
     && !IsNullOrWhiteSpace(secondField)
@@ -18,6 +18,17 @@ function CheckAndShowResults(id){
             alert("Non puoi inserire 0 sottoreti.");
             return;
         }
+
+        let nMaxHosts = (GetNHost(firstField, secondField) - 1);
+
+        let parallaxDivDivs = document.getElementsByTagName("input");
+        Array.from(parallaxDivDivs).forEach(element => {
+            if(element.id.includes("hostsSubnet")){
+                if(parseInt(element.value) > nMaxHosts){
+                    throw alert("Inserire un valore minore di " + nMaxHosts + " (Il numero massimo di indirizzi hosts assegnabili per ogni sottorete).");
+                }
+            }
+        });
 
         console.log(firstField + ", " + secondField);
         let e = document.getElementById(id);
@@ -92,6 +103,7 @@ function GenerateHostsTextBoxes(){
             textBox.type = "text";
             textBox.id = "hostsSubnet" +  (i + 1);
             textBox.classList.add("form-control");
+            textBox.placeholder = "Se non inserisci nulla daremo per scontato che ci sarà un solo host."
             textBoxDiv.appendChild(textBox);
 
             document.getElementById("fields").appendChild(textBoxDiv);
@@ -132,7 +144,7 @@ function PrintResults(){
     document.getElementById("SubnetID").textContent = SubnetMaskBinarySubnetID.toString();
     document.getElementById("HostID").textContent = SubnetMaskBinaryHostID.toString();
 
-    document.getElementById("maximumHostsForeachSubnet").textContent = GetNHost(IP, nSubnets);
+    document.getElementById("maximumHostsForeachSubnet").textContent = GetNHost(IP, nSubnets) + " (" + (GetNHost(IP, nSubnets) - 1) + " senza gateway).";
 
     let SubnetsIps = GetAllSubnetsIps(IP, nSubnets);
     let ranges = GetRange(IP, SubnetsIps, nSubnets);
@@ -202,12 +214,9 @@ function IPToBinary(str){
         return null;
     }
 
-    let octetc1 = parseInt(str.split('.', 1));
-    let octetc2 = parseInt(str.split('.', 2));
-    let octetc3 = parseInt(str.split('.', 3));
-    let octetc4 = parseInt(str.split('.', 4));
+    let octects = str.split('.');
 
-    let binaryIP = OctectToBinary(octetc1) + "." + OctectToBinary(octetc2) + "." + OctectToBinary(octetc3) + "." + OctectToBinary(octetc4);
+    let binaryIP = OctectToBinary(parseInt(octects[0])) + "." + OctectToBinary(parseInt(octects[1])) + "." + OctectToBinary(parseInt(octects[2])) + "." + OctectToBinary(parseInt(octects[3]));
     return binaryIP;
 }
 
@@ -450,10 +459,10 @@ function GetRange(IP, subnets, nSubnets){
         let splittedBroadcastAddress = broadcastAddress.split('.');
         let lastBroadcastOctect = parseInt(splittedBroadcastAddress[3]) - 1;
 
-        let lastRange = splittedBroadcastAddress[0] + "." + splittedBroadcastAddress[1] + "." + splittedBroadcastAddress[2] + "." + lastBroadcastOctect;
+        let fourthRange = splittedBroadcastAddress[0] + "." + splittedBroadcastAddress[1] + "." + splittedBroadcastAddress[2] + "." + lastBroadcastOctect;
 
         let string = document.createElement("td");
-        string.textContent = firstRange + " - " + lastRange;       
+        string.textContent = firstRange + " - " + fourthRange;       
 
         let subnetMask = GetSubnetMask(IP, nSubnets);
         let idkMask = subnetMask.split(".");
@@ -489,33 +498,60 @@ function GetUsedHosts(IP, subnets, nSubnets){
 
     for(let i = 0; i < subnetsNHost.length; i++){
 
-        let binaryIP = IPToBinary(IP);
-        let lastRange = binaryIP[3];
-        let lastSum = "";
 
-        if(lastSum != "11111111"){
-            lastSum = addBinary(lastSum, 1);
-            console.log(lastSum);
+        let networkAddress = subnets[i].networkIp;
 
-            if(i == subnetsNHost.length - 1){
-                lastRange = last
+        let splittedNetworkAddress = networkAddress.split('.');
+        let lastOctect = parseInt(splittedNetworkAddress[3]) + 1;
+        if(lastOctect == subnets[i].gatewayIp.split('.')[3]){
+            lastOctect = parseInt(lastOctect) + 1;
+        }
+
+        let firstRange = splittedNetworkAddress[0] + "." + splittedNetworkAddress[1] + "." + splittedNetworkAddress[2] + "." + lastOctect;
+
+        let binaryIP = IPToBinary(subnets[i].gatewayIp).split('.');
+        let hostID = OctectToBinary(lastOctect);
+
+        console.log(binaryIP.toString().split('0'));
+
+        console.log("subnetsnhost: " + subnetsNHost[i])
+
+        for(let j = 0; j < subnetsNHost[i] - 1; j++){ 
+            hostID = addBinary(hostID, "1")
+        }
+
+        if(hostID.toString().length > 16){
+            hostID = hostID.toString().substring(0, hostID.length - 16) + "." + hostID.toString().substring(hostID.length - 16, hostID.length - 8) + "." + hostID.toString().substring(hostID.length - 8, hostID.length);
+        }
+        else if(hostID.toString().length > 8){
+            hostID = hostID.toString().substring(0, hostID.length - 8) + "." + hostID.toString().substring(hostID.length - 8, hostID.length);
+        }
+
+        let joinedIP = binaryIP[0] + "." + binaryIP[1] + "." + binaryIP[2] + "." + binaryIP[3];
+        let result = joinedIP.toString().slice(0 , joinedIP.length - hostID.length) + hostID;
+        let finalResult = result.split('.');
+
+        for(let j = 0; j < finalResult.length; j++){
+            if(finalResult[j].length > 3){
+                finalResult[j] = parseInt(finalResult[j], 2);
             }
         }
 
-        let tooltip = document.createElement("span");
+        finalResult = finalResult.join('.');
 
-        if(subnetsNHost[i] != 1){
-            tooltip.textContent = "Range di host utilizzati: " + firstRange + " - " + secondRange;
+        let tooltip = document.createElement("span");
+    
+        if(subnetsNHost[i] > 1){
+            tooltip.textContent = "Range di indirizzi host assegnati: " + firstRange + " - " + finalResult;
         }
         else{
-            tooltip.textContent = "Host utilizzato:" + firstRange;
+            tooltip.textContent = "Indirizzo host assegnato: " + firstRange;
         }
-        //let finalipfica = "";
-        ranges[i] = tooltip;
+
+        ranges[i] = tooltip;   
     }
 
-    return ranges;
-    
+    return ranges;  
 }
 
 function GetSubnetsHosts(){
@@ -549,23 +585,25 @@ function fullAdder(a, b, carry){
   function or(a, b){return (a || b);}
   
 function addBinary(a, b){
-  
-    let sum = '';
-    let carry = '';
-  
-    for(var i = a.length-1;i>=0; i--){
-      if(i == a.length-1){
-        //half add the first pair
-        const halfAdd1 = halfAdder(a[i],b[i]);
-        sum = halfAdd1[0]+sum;
-        carry = halfAdd1[1];
-      }else{
-        //full add the rest
-        const fullAdd = fullAdder(a[i],b[i],carry);
-        sum = fullAdd[0]+sum;
-        carry = fullAdd[1];
-      }
-    }
-  
-    return carry ? carry + sum : sum;
+    var result = "",
+    carry = 0;
+
+while(a || b || carry){
+  let sum = +a.slice(-1) + +b.slice(-1) + carry; // get last digit from each number and sum 
+
+  if( sum > 1 ){  
+    result = sum%2 + result;
+    carry = 1;
   }
+  else{
+    result = sum + result;
+    carry = 0;
+  }
+  
+  // trim last digit (110 -> 11)
+  a = a.slice(0, -1)
+  b = b.slice(0, -1)
+}
+
+return result;
+}
