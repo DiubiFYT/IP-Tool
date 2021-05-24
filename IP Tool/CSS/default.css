@@ -96,6 +96,11 @@ button.sticky {
     }
 }
 
+canvas{
+    width: 100px !important;
+    height: 100px !important;
+}
+
 .scrollable{
     overflow-y: auto;
 }

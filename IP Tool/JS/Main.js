@@ -566,8 +566,8 @@ function DrawPiesChart(IP, nSubnets){
             type: 'pie',
             data : {
                 labels:[ 
-                    'host liberi',
-                    'host usati',
+                    'Indirizzi host liberi',
+                    'Indirizzi host assegnati',
                   ],
                   datasets: [{
                     label: 'My First Dataset',
@@ -578,7 +578,11 @@ function DrawPiesChart(IP, nSubnets){
                     ],
                     hoverOffset: 4,
                   }]
-                }
+                },
+            options:{
+                responsive: true,
+                mantainAspectRatio: false,
+            }
             });
         
     }
