@@ -156,11 +156,12 @@ function PrintResults(){
         tr += "<td>" + SubnetsIps[i].broadcasIp + "</td>";
         tr += "<td>" + SubnetsIps[i].gatewayIp + "</td>";
         tr += '<td class="tooltipx">' + ranges[i].innerHTML + '<span class="tooltiptextx nonewline">' + usedHosts[i].innerHTML + '</span></td>';
-        //tr += "<span class='tooltip'> caca </span>"
+        tr += '<td> <canvas id="canvas' + i + '" width="0" height="0"></canvas> </td>';
         tr += "</tr>";
         t += tr;
     }
     document.getElementById("Table").innerHTML = t;
+    DrawPiesChart(IP, nSubnets);
 }
 
 function IsNullOrWhiteSpace(str){
@@ -550,8 +551,39 @@ function GetUsedHosts(IP, subnets, nSubnets){
 
         ranges[i] = tooltip;   
     }
-
     return ranges;  
+}
+
+function DrawPiesChart(IP, nSubnets){
+    let nUsedHosts = GetSubnetsHosts();
+
+    for(let i = 0; i < nSubnets; i++){
+        let nRemainingHost = GetNHost(IP, nSubnets) - nUsedHosts[i];
+
+console.log(GetNHost(IP, nSubnets));    
+
+        let canvas = document.getElementById("canvas" + i);
+        let ctx = canvas.getContext('2d');
+        let chart = new Chart(ctx, {
+            type: 'pie',
+            data : {
+                labels:[ 
+                    'Red',
+                    'Blue',
+                  ],
+                  datasets: [{
+                    label: 'My First Dataset',
+                    data: [nRemainingHost, nUsedHosts[i]],
+                    backgroundColor: [
+                      'rgb(255, 99, 132)',
+                      'rgb(54, 162, 235)',
+                    ],
+                    hoverOffset: 4,
+                  }]
+                }
+            });
+        
+    }
 }
 
 function GetSubnetsHosts(){
