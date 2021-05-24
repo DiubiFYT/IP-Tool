@@ -560,16 +560,14 @@ function DrawPiesChart(IP, nSubnets){
     for(let i = 0; i < nSubnets; i++){
         let nRemainingHost = GetNHost(IP, nSubnets) - nUsedHosts[i];
 
-console.log(GetNHost(IP, nSubnets));    
-
         let canvas = document.getElementById("canvas" + i);
         let ctx = canvas.getContext('2d');
-        let chart = new Chart(ctx, {
+        new Chart(ctx, {
             type: 'pie',
             data : {
                 labels:[ 
-                    'Red',
-                    'Blue',
+                    'host liberi',
+                    'host usati',
                   ],
                   datasets: [{
                     label: 'My First Dataset',
