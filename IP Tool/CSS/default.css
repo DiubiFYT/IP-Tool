@@ -157,7 +157,11 @@ canvas{
 
 @media(min-width: 768px){
     .resizetext{
-        font-size: 1.3vmin;
+        font-size: 1.2vmin;
+    }
+
+    #FirstForm{
+        max-width: 640px;
     }
 }
 

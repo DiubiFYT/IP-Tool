@@ -39,9 +39,9 @@
             
             <div class="container-fluid padding">
                 <div style="display: inline-block;">
-                    <a href="subnetmask.html" style="color: black;"><h5>Nuova subnet mask</h5></a>
+                    <a href="" style="color: black;" id="SubnetMaskExplanation" data-bs-toggle="modal" data-bs-target="#smModal"><h5>Nuova subnet mask</h5></a>
                     <h3 id="newSM"></h3>
-                    <a href="ipclass.html" style="color: black;"><h3 style="text-align: center;" id="IPbelongsToWhichClass">Classe</h3></a>
+                    <a href="" style="color: black;" data-bs-toggle="modal" data-bs-target="#ipClassModal"><h3 style="text-align: center;" id="IPbelongsToWhichClass">Classe</h3></a>
                 </div>
             </div>
 
@@ -70,7 +70,7 @@
                 <div class="nonewline resizetext resizetextmobile">
 
                     <div style="display: inline-block;">
-                        <a href="subnetmask.html" style="color:black"><h5 style="margin-right: 20px;">Numero di host massimi per ogni sottorete</h5></a>
+                        <a href="" data-bs-toggle="modal" data-bs-target="#ipClassModal" style="color:black"><h5 style="margin-right: 20px;">Numero di host massimi per ogni sottorete</h5></a>
                         <h3 style="text-align: center;" id="maximumHostsForeachSubnet">test</h3>
                     </div>
                 </div>
@@ -103,6 +103,143 @@
                 <canvas id="chart"></canvas>
             </div>-->
         </div>
+
+        <div class="modal fade" id="smModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="padding">
+                        <div style="text-align: center;">
+                            <h1 style="color: black;">La Subnet Mask</h1>
+                            <h5 class="padding">La Subnet Mask è un parametro in formato dotted-decimal che definisce la dimensione della sottorete o delle sottoreti a cui appartengono gli host. <br><br>
+                                Da essa si possono ricavare il numero di host assegnabili, sottoreti e reti che possono essere gestite da un router.
+                            </h5>
+                        </div>
+                    </div>
+        
+                    <div class="container-fluid padding" style="text-align: center;">
+                        <h3 class="padding">255.255.255.192
+                        </h3>
+                        <div class="nonewline resizetextmobile resizetext">
+                        <div style="display: inline-block;">
+                            <h3 style="background-color: rgb(110, 195, 223);" id="NetID">11111111.11111111.11111111.</h3>
+                            <p style="text-align: center;">Net ID</p>
+                        </div><!--
+                        
+                        --><div style="display: inline-block;">
+                            <h3 style="background-color: lightcoral;" id="SubnetID">11</h3>
+                            <p style="text-align: center;">Subnet ID</p>
+                        </div><!--
+        
+                        --><div style="display: inline-block;">                           
+                            <h3 style="background-color: lightgreen;" id="HostID">111111</h3>
+                            <p style="text-align: center;">Host ID</p>
+                        </div>
+                    </div>
+                    </div>
+        
+                    <div class="padding">
+                        <div style="text-align: center;">
+                                <h5 class="padding">In questo caso avremo disponibili 2<sup>16</sup> reti, 2<sup>2</sup> sottoreti e 2<sup>6</sup> hosts.</h5>
+                                <h5 class="padding">Per ricavare gli indirizzi assegnabili agli host bisognerà fare 2<sup>n</sup>-2 (-3 se si vuole escludere l'indirizzo di gateway).</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="ipClassModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="padding">
+                        <div style="text-align: center;">
+                            <h1 style="color: black;">Le Classi IP</h1>
+                            <h5 class="padding"> Vengono usate per dividere lo spazio di indirizzamento IPv4.<br><br>
+                                Ne esistono 5 tipi, analizziamo i primi 3: <br><br>
+                                <dl>
+                                    <dt>Classe A</dt>
+                                    <dd>Il primo ottetto di bits rappresenta la rete, gli altri tre gli host per ogni rete</dd>
+                                    <dd>Gli IP variano nel modo seguente: <span style="color:#32CD32">1-127</span>.<span style="color:#FA8072">H</span>.<span style="color:#FA8072">H</span>.<span style="color:#FA8072">H</span></dd>
+                                    <dd>La maschera di rete è 255.0.0.0 <strong>(CIDR /8)</strong></dd>
+                                    <dd>Questi indirizzi in binario iniziano con il bit <span style="color: red">0</span></dd>
+                                    <div class="container-fluid padding" style="text-align: center;">
+                                        <div class="nonewline resizetextmobile resizetext">
+                                        <div style="display: inline-block;">
+                                            <h3 style="background-color: rgb(110, 195, 223);" id="NetID">92</h3>
+                                            <p style="text-align: center;">Rete</p>
+                                        </div><!--
+                        
+                                        
+                                        --><div style="display: inline-block;">                           
+                                            <h3 style="background-color: lightgreen;" id="HostID">.1.1.1</h3>
+                                            <p style="text-align: center;">Hosts</p>
+                                        </div>
+                                        </div>
+                                        <br>
+                                    <dt>Classe B</dt>
+                                    <dd>I primi due ottetti di bits rappresentano la rete; gli altri due gli host per ogni rete</dd>
+                                    <dd>Gli IP variano nel modo seguente: <span style="color:#32CD32">128-191</span>.<span style="color:#32CD32">N</span>.<span style="color:#FA8072">H</span>.<span style="color:#FA8072">H</span></dd>
+                                    <dd>N varia da 0 a 255</dd>
+                                    <dd>La maschera di rete è 255.255.0.0 <strong>(CIDR /16)</strong></dd>
+                                    <dd>Questi indirizzi in binario iniziano con i bit <span style="color:red;">10</span></dd>
+                                    
+                                    <div class="container-fluid padding" style="text-align: center;">
+                                        <div class="nonewline resizetextmobile resizetext">
+                                        <div style="display: inline-block;">
+                                            <h3 style="background-color: rgb(110, 195, 223);" id="NetID">172.122</h3>
+                                            <p style="text-align: center;">Rete</p>
+                                        </div><!--
+                        
+                                        
+                                        --><div style="display: inline-block;">                           
+                                            <h3 style="background-color: lightgreen;" id="HostID">.1.1</h3>
+                                            <p style="text-align: center;">Hosts</p>
+                                        </div>
+                                        </div>
+                                        <br>
+                                    <dt>Classe C</dt>
+                                    <dd>I primi tre ottetti di bits rappresentano la rete; l'ultimo gli host per ogni rete</dd>
+                                    <dd>Gli IP variano nel modo seguente: <span style="color:#32CD32">192-223</span>.<span style="color:#32CD32">N</span>.<span style="color:#32CD32">N</span>.<span style="color:#FA8072">H</span></dd>
+                                    <dd>N variano da 0 a 255</dd>
+                                    <dd>La maschera di rete è 255.255.255.0 <strong>(CIDR /24)</strong></dd>
+                                    <dd>Questi indirizzi in binario iniziano con i bit <span style="color:red;">110</span></dd>
+                                    <div class="container-fluid padding" style="text-align: center;">
+                                        <div class="nonewline resizetextmobile resizetext">
+                                        <div style="display: inline-block;">
+                                            <h3 style="background-color: rgb(110, 195, 223);" id="NetID">192.168.1</h3>
+                                            <p style="text-align: center;">Rete</p>
+                                        </div><!--
+                        
+                                        
+                                        --><div style="display: inline-block;">                           
+                                            <h3 style="background-color: lightgreen;" id="HostID">.1</h3>
+                                            <p style="text-align: center;">Hosts</p>
+                                        </div>
+                                </dl>
+                            </h5>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
         <script src="../JS/Main.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
