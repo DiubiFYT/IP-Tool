@@ -600,23 +600,6 @@ function GetSubnetsHosts(){
     })
     return data;
 }
-
-function halfAdder(a, b){
-    const sum = xor(a,b);
-    const carry = and(a,b);
-    return [sum, carry];
-  }  
-function fullAdder(a, b, carry){
-    halfAdd = halfAdder(a,b);
-    const sum = xor(carry, halfAdd[0]);
-    carry = and(carry, halfAdd[0]);
-    carry = or(carry, halfAdd[1]);
-    return [sum, carry];
-}  
-
-  function xor(a, b){return (a === b ? 0 : 1);}
-  function and(a, b){return a == 1 && b == 1 ? 1 : 0;}
-  function or(a, b){return (a || b);}
   
 function addBinary(a, b){
     var result = "",
